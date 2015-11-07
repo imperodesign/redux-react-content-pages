@@ -1,0 +1,29 @@
+{
+  "name": "redux-react-content-pages",
+  "version": "1.0.0",
+  "description": "Content pages backoffice example built with Redux and React.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JacopoDaeli/redux-react-content-pages.git"
+  },
+  "keywords": [
+    "react",
+    "redux",
+    "es6",
+    "browserify",
+    "npm"
+  ],
+  "author": "Jacopo Daeli <jacopo.daeli@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JacopoDaeli/redux-react-content-pages/issues"
+  },
+  "homepage": "https://github.com/JacopoDaeli/redux-react-content-pages#readme",
+  "devDependencies": {
+    "babelify": "^7.2.0"
+  }
+}
