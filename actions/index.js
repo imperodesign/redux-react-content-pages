@@ -1,33 +1,15 @@
 import fetch from 'isomorphic-fetch'
-
-export const REQUEST_PAGES = 'REQUEST_POSTS'
-export const RECEIVE_PAGES = 'RECEIVE_POSTS'
-// export const SELECT_REDDIT = 'SELECT_REDDIT'
-// export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT'
-
-// export function selectReddit (reddit) {
-//   return {
-//     type: SELECT_REDDIT,
-//     reddit
-//   }
-// }
-//
-// export function invalidateReddit (reddit) {
-//   return {
-//     type: INVALIDATE_REDDIT,
-//     reddit
-//   }
-// }
+import * as types from '../constants/ActionTypes'
 
 function requestPages (reddit) {
   return {
-    type: REQUEST_PAGES
+    type: types.REQUEST_PAGES
   }
 }
 
 function receivePages (json) {
   return {
-    type: RECEIVE_PAGES,
+    type: types.RECEIVE_PAGES,
     pages: json
   }
 }
@@ -39,4 +21,8 @@ export function fetchPages () {
       .then(response => response.json())
       .then(json => dispatch(receivePages(json)))
   }
+}
+
+export function setVisibilityFilter (filter) {
+  return { type: type.SET_VISIBILITY_FILTER, filter }
 }

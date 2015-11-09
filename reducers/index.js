@@ -1,20 +1,27 @@
 import { combineReducers } from 'redux'
 import { routerStateReducer as router } from 'redux-router'
+import * as types from '../constants/ActionTypes'
+import { SHOW_ALL } from '../constants/PageFilters'
 
-import {
-  REQUEST_PAGES, RECEIVE_PAGES
-} from '../actions'
+function visibilityFilter(state = SHOW_ALL, action) {
+  switch (action.type) {
+    case SET_VISIBILITY_FILTER:
+      return action.filter
+    default:
+      return state
+  }
+}
 
 function pages (state = {
   isFetching: false,
   items: []
 }, action) {
   switch (action.type) {
-    case REQUEST_PAGES:
+    case types.REQUEST_PAGES:
       return Object.assign({}, state, {
         isFetching: true
       })
-    case RECEIVE_PAGES:
+    case types.RECEIVE_PAGES:
       return Object.assign({}, state, {
         isFetching: false,
         items: action.pages
