@@ -1,5 +1,5 @@
-const path = require('path')
-const webpack = require('webpack')
+var path = require('path')
+var webpack = require('webpack')
 
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
@@ -20,7 +20,7 @@ module.exports = {
   module: {
     loaders: [{
       test: /\.js$/,
-      loaders: [ 'babel' ],
+      loaders: ['babel'],
       exclude: /node_modules/,
       include: __dirname
     }]
@@ -39,7 +39,7 @@ if (fs.existsSync(reduxSrc) && fs.existsSync(reduxNodeModules)) {
   // Compile Redux from source
   module.exports.module.loaders.push({
     test: /\.js$/,
-    loaders: [ 'babel' ],
+    loaders: ['babel'],
     include: reduxSrc
   })
 }
