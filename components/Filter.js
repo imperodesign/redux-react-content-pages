@@ -1,29 +1,43 @@
 import React, { Component, PropTypes } from 'react'
+import { SHOW_ALL, SHOW_PUBLISHED, SHOW_UNPUBLISHED } from '../constants/PageFilters'
 
-export default class Picker extends Component {
-  render () {
-    const { value, onChange, options } = this.props
+export default class Filter extends Component {
+  renderFilter (filter, name) {
+    if (filter === this.props.filter) {
+      return name
+    }
 
     return (
-      <span>
-        <h1>{value}</h1>
-        <select onChange={e => onChange(e.target.value)}
-                value={value}>
-          {options.map(option =>
-            <option value={option} key={option}>
-              {option}
-            </option>)
-          }
-        </select>
-      </span>
+      <a href='#' onClick={e => {
+        e.preventDefault()
+        this.props.onFilterChange(filter)
+      }}>
+        {name}
+      </a>
+    )
+  }
+
+  render () {
+    return (
+      <p>
+        Show:
+        {' '}
+        {this.renderFilter(SHOW_ALL, 'All')}
+        {', '}
+        {this.renderFilter(SHOW_PUBLISHED, 'Published')}
+        {', '}
+        {this.renderFilter(SHOW_UNPUBLISHED, 'Unpublished')}
+        .
+      </p>
     )
   }
 }
 
-Picker.propTypes = {
-  options: PropTypes.arrayOf(
-    PropTypes.string.isRequired
-  ).isRequired,
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired
+Filter.propTypes = {
+  onFilterChange: PropTypes.func.isRequired,
+  filter: PropTypes.oneOf([
+    SHOW_ALL,
+    SHOW_PUBLISHED,
+    SHOW_UNPUBLISHED
+  ]).isRequired
 }

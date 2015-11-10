@@ -3,9 +3,9 @@ import { routerStateReducer as router } from 'redux-router'
 import * as types from '../constants/ActionTypes'
 import { SHOW_ALL } from '../constants/PageFilters'
 
-function visibilityFilter(state = SHOW_ALL, action) {
+function visibilityFilter (state = SHOW_ALL, action) {
   switch (action.type) {
-    case SET_VISIBILITY_FILTER:
+    case types.SET_VISIBILITY_FILTER:
       return action.filter
     default:
       return state
@@ -32,6 +32,7 @@ function pages (state = {
 }
 
 const rootReducer = combineReducers({
+  visibilityFilter,
   pages,
   router
 })

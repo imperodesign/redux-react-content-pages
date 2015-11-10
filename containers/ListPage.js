@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { fetchPages } from '../actions'
-// import Picker from '../components/Picker'
+import { fetchPages, setVisibilityFilter } from '../actions'
+import * as VisibilityFilters from '../constants/PageFilters'
 import Pages from '../components/Pages'
+import Filter from '../components/Filter'
 
 class ListPage extends Component {
   constructor (props) {
@@ -33,19 +34,26 @@ class ListPage extends Component {
   //         options={[ 'reactjs', 'frontend' ]} />
 
   render () {
-    const { pages, isFetching } = this.props
+    const { visiblePages, isFetching, visibilityFilter, dispatch } = this.props
 
     return (
       <div>
-        {isFetching && pages.length === 0 &&
+
+        <Filter
+          filter={visibilityFilter}
+          onFilterChange={nextFilter =>
+            dispatch(setVisibilityFilter(nextFilter))
+          } />
+
+        {isFetching && visiblePages.length === 0 &&
           <h2>Loading...</h2>
         }
-        {!isFetching && pages.length === 0 &&
+        {!isFetching && visiblePages.length === 0 &&
           <h2>Empty.</h2>
         }
-        {pages.length > 0 &&
+        {visiblePages.length > 0 &&
           <div style={{ opacity: isFetching ? 0.5 : 1 }}>
-            <Pages pages={pages} />
+            <Pages pages={visiblePages} />
           </div>
         }
       </div>
@@ -54,20 +62,31 @@ class ListPage extends Component {
 }
 
 ListPage.propTypes = {
-  pages: PropTypes.array.isRequired,
+  visiblePages: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
+  visibilityFilter: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired
 }
 
+function selectPages (pages, filter) {
+  switch (filter) {
+    case VisibilityFilters.SHOW_ALL:
+      return pages
+    case VisibilityFilters.SHOW_PUBLISHED:
+      return pages.filter(page => page.published)
+    case VisibilityFilters.SHOW_UNPUBLISHED:
+      return pages.filter(page => !page.published)
+  }
+}
+
 function mapStateToProps (state) {
-  const { pages } = state
+  const { pages, visibilityFilter } = state
   const { isFetching, items } = pages
 
-  console.log(pages)
-
   return {
-    pages: items,
-    isFetching
+    visiblePages: selectPages(items, visibilityFilter),
+    isFetching,
+    visibilityFilter
   }
 }
 

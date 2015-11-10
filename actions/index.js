@@ -24,5 +24,5 @@ export function fetchPages () {
 }
 
 export function setVisibilityFilter (filter) {
-  return { type: type.SET_VISIBILITY_FILTER, filter }
+  return { type: types.SET_VISIBILITY_FILTER, filter }
 }
