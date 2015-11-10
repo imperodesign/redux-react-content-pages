@@ -6,7 +6,8 @@ export default class TextSearchFilter extends Component {
     const { filter, onFilterChange } = this.props
     return (
       <p>
-        <input value={filter} type='text' onChange={e => {
+        Search:&nbsp;
+        <input value={filter} type='text' placeholder='Type something ...' onChange={e => {
           e.preventDefault()
           onFilterChange(e.target.value)
         }} />
