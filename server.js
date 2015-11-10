@@ -14,9 +14,6 @@ app.get('/pages.json', (req, res) => res.sendFile(__dirname + '/pages.json'))
 app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'))
 
 app.listen(port, error => {
-  if (error) {
-    console.error(error)
-  } else {
-    console.info('==> 🌎  Listening on port %s. Open up http://localhost:%s/ in your browser.', port, port)
-  }
+  if (error) return console.error(error)
+  console.info('==> 🌎  Listening on port %s. Open up http://localhost:%s/ in your browser.', port, port)
 })
