@@ -18,22 +18,6 @@ class ListPage extends Component {
     dispatch(fetchPages())
   }
 
-  // handleChange(nextReddit) {
-  //   this.props.dispatch(selectReddit(nextReddit))
-  // }
-  //
-  // handleRefreshClick(e) {
-  //   e.preventDefault()
-  //
-  //   const { dispatch, selectedReddit } = this.props
-  //   dispatch(invalidateReddit(selectedReddit))
-  //   dispatch(fetchPostsIfNeeded(selectedReddit))
-  // }
-
-  // <Picker value={selectedReddit}
-  //         onChange={this.handleChange}
-  //         options={[ 'reactjs', 'frontend' ]} />
-
   render () {
     const {
       filteredPages, isFetching,
