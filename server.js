@@ -11,7 +11,6 @@ app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output
 app.use(webpackHotMiddleware(compiler))
 
 app.get('/pages.json', (req, res) => res.sendFile(__dirname + '/pages.json'))
-
 app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'))
 
 app.listen(port, error => {
