@@ -23,6 +23,10 @@ export function fetchPages () {
   }
 }
 
-export function setVisibilityFilter (filter) {
-  return { type: types.SET_VISIBILITY_FILTER, filter }
+export function setPublishStatusFilter (filter) {
+  return { type: types.SET_PUBLISH_STATUS_FILTER, filter }
+}
+
+export function setTextSearchFilter (filter) {
+  return { type: types.SET_TEXT_SEARCH_FILTER, filter }
 }

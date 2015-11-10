@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { fetchPages, setVisibilityFilter } from '../actions'
-import * as VisibilityFilters from '../constants/PageFilters'
+import { fetchPages, setPublishStatusFilter, setTextSearchFilter } from '../actions'
+import * as PageFilters from '../constants/PageFilters'
 import Pages from '../components/Pages'
-import Filter from '../components/Filter'
+import PublishStatusFilter from '../components/PublishStatusFilter'
+import TextSearchFilter from '../components/TextSearchFilter'
 
 class ListPage extends Component {
   constructor (props) {
@@ -34,26 +35,36 @@ class ListPage extends Component {
   //         options={[ 'reactjs', 'frontend' ]} />
 
   render () {
-    const { visiblePages, isFetching, visibilityFilter, dispatch } = this.props
+    const {
+      filteredPages, isFetching,
+      publishStatusFilter, textSearchFilter,
+      dispatch
+    } = this.props
 
     return (
       <div>
 
-        <Filter
-          filter={visibilityFilter}
+        <PublishStatusFilter
+          filter={publishStatusFilter}
           onFilterChange={nextFilter =>
-            dispatch(setVisibilityFilter(nextFilter))
+            dispatch(setPublishStatusFilter(nextFilter))
           } />
 
-        {isFetching && visiblePages.length === 0 &&
+        <TextSearchFilter
+          filter={textSearchFilter}
+          onFilterChange={nextFilter =>
+            dispatch(setTextSearchFilter(nextFilter))
+          } />
+
+        {isFetching && filteredPages.length === 0 &&
           <h2>Loading...</h2>
         }
-        {!isFetching && visiblePages.length === 0 &&
+        {!isFetching && filteredPages.length === 0 &&
           <h2>Empty.</h2>
         }
-        {visiblePages.length > 0 &&
+        {filteredPages.length > 0 &&
           <div style={{ opacity: isFetching ? 0.5 : 1 }}>
-            <Pages pages={visiblePages} />
+            <Pages pages={filteredPages} />
           </div>
         }
       </div>
@@ -62,31 +73,37 @@ class ListPage extends Component {
 }
 
 ListPage.propTypes = {
-  visiblePages: PropTypes.array.isRequired,
+  filteredPages: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
-  visibilityFilter: PropTypes.string.isRequired,
+  publishStatusFilter: PropTypes.string.isRequired,
+  textSearchFilter: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired
 }
 
-function selectPages (pages, filter) {
-  switch (filter) {
-    case VisibilityFilters.SHOW_ALL:
+function selectPages (pages, psf, rsf) {
+  if (rsf) {
+    pages = pages.filter(page => !!page.name.match(new RegExp(rsf, 'gi')))
+  }
+
+  switch (psf) {
+    case PageFilters.SHOW_ALL:
       return pages
-    case VisibilityFilters.SHOW_PUBLISHED:
+    case PageFilters.SHOW_PUBLISHED:
       return pages.filter(page => page.published)
-    case VisibilityFilters.SHOW_UNPUBLISHED:
+    case PageFilters.SHOW_UNPUBLISHED:
       return pages.filter(page => !page.published)
   }
 }
 
 function mapStateToProps (state) {
-  const { pages, visibilityFilter } = state
+  const { pages, publishStatusFilter, textSearchFilter } = state
   const { isFetching, items } = pages
 
   return {
-    visiblePages: selectPages(items, visibilityFilter),
+    filteredPages: selectPages(items, publishStatusFilter, textSearchFilter),
     isFetching,
-    visibilityFilter
+    publishStatusFilter,
+    textSearchFilter
   }
 }
 
