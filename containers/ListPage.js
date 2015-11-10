@@ -1,16 +1,24 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { fetchPages, setPublishStatusFilter, setTextSearchFilter } from '../actions'
+import {
+  fetchPages, setPublishStatusFilter,
+  setTextSearchFilter, createPage,
+  updatePage
+} from '../actions'
 import * as PageFilters from '../constants/PageFilters'
 import Pages from '../components/Pages'
 import PublishStatusFilter from '../components/PublishStatusFilter'
 import TextSearchFilter from '../components/TextSearchFilter'
+import CreateForm from '../components/CreateForm'
 
 class ListPage extends Component {
   constructor (props) {
     super(props)
-    // this.handleChange = this.handleChange.bind(this)
-    // this.handleRefreshClick = this.handleRefreshClick.bind(this)
+  }
+
+  onTogglePublish (pageId, published) {
+    const { dispatch } = this.props
+    dispatch(updatePage(pageId, {published}))
   }
 
   componentDidMount () {
@@ -21,6 +29,7 @@ class ListPage extends Component {
   render () {
     const {
       filteredPages, isFetching,
+      isCreating, createFormInputNameValue,
       publishStatusFilter, textSearchFilter,
       dispatch
     } = this.props
@@ -48,9 +57,16 @@ class ListPage extends Component {
         }
         {filteredPages.length > 0 &&
           <div style={{ opacity: isFetching ? 0.5 : 1 }}>
-            <Pages pages={filteredPages} />
+            <Pages pages={filteredPages} onTogglePublish={this.onTogglePublish.bind(this)} />
           </div>
         }
+
+        <CreateForm
+          inputNameValue={createFormInputNameValue}
+          disabled={isCreating}
+          onCreateClick={name =>
+            dispatch(createPage(name))
+          } />
       </div>
     )
   }
@@ -59,6 +75,8 @@ class ListPage extends Component {
 ListPage.propTypes = {
   filteredPages: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
+  isCreating: PropTypes.bool.isRequired,
+  createFormInputNameValue: PropTypes.string.isRequired,
   publishStatusFilter: PropTypes.string.isRequired,
   textSearchFilter: PropTypes.string.isRequired,
   dispatch: PropTypes.func.isRequired
@@ -81,11 +99,13 @@ function selectPages (pages, psf, rsf) {
 
 function mapStateToProps (state) {
   const { pages, publishStatusFilter, textSearchFilter } = state
-  const { isFetching, items } = pages
+  const { isFetching, items, createFormInputNameValue, isCreating } = pages
 
   return {
     filteredPages: selectPages(items, publishStatusFilter, textSearchFilter),
     isFetching,
+    isCreating,
+    createFormInputNameValue,
     publishStatusFilter,
     textSearchFilter
   }
