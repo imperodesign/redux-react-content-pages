@@ -12,7 +12,7 @@ const config = require('./webpack.config')
 const app = new (require('express'))()
 const port = 3000
 
-const pages = JSON.parse(fs.readFileSync(`${__dirname}/pages.json`))
+let pages = JSON.parse(fs.readFileSync(`${__dirname}/pages.json`))
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -40,8 +40,26 @@ function updatePageById (id, params) {
   return page
 }
 
+function deletePageById (id) {
+  let page = null
+  for (let i = 0; i < pages.length; i++) {
+    if (pages[i].id === id) {
+      page = pages[i]
+      pages = [
+        ...pages.slice(0, i),
+        ...pages.slice(i + 1)
+      ]
+
+      break
+    }
+  }
+  return page
+}
+
 app.get('/pages', (req, res) => res.json(pages))
+
 app.get('/pages/:id', (req, res) => res.json(findPageById(req.params.id)))
+
 app.post('/pages', (req, res) => {
   const page = _.assign({}, req.body)
   page.id = shortid.generate()
@@ -53,11 +71,24 @@ app.post('/pages', (req, res) => {
     res.json(page)
   }, 3000)
 })
-app.put('/pages/:id', (req, res) => res.json(updatePageById(req.params.id, req.body)))
-app.delete('/pages', (req, res) => res.json(pages))
+
+app.put('/pages/:id', (req, res) => {
+  // Simulate latency
+  setTimeout(() => {
+    res.json(updatePageById(req.params.id, req.body))
+  }, 1750)
+})
+
+app.delete('/pages/:id', (req, res) => {
+  // Simulate latency
+  setTimeout(() => {
+    res.json(deletePageById(req.params.id))
+  }, 1500)
+})
 
 app.get('/pages.json', (req, res) => res.sendFile(`${__dirname}/pages.json`))
-app.get('/', (req, res) => res.sendFile(`${__dirname}/index.html`))
+
+app.use('/', (req, res) => res.sendFile(`${__dirname}/index.html`))
 
 app.listen(port, error => {
   if (error) return console.error(error)

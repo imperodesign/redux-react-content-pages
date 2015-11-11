@@ -98,6 +98,39 @@ export function updatePage (id, params) {
   }
 }
 
+function deletePageRequest (id, params) {
+  return { type: types.DELETE_PAGE_REQUEST, id, params }
+}
+
+function deletePageSuccess (json) {
+  return { type: types.DELETE_PAGE_SUCCESS, page: json }
+}
+
+function deletePageFailure (error) {
+  return { type: types.DELETE_PAGE_FAILURE, error }
+}
+
+export function deletePage (id, params) {
+  return dispatch => {
+    dispatch(deletePageRequest(id))
+    return fetch(`${PAGES_URL}/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (response.status > 399) {
+          throw new Error(`${response.status} - ${response.statusText}`)
+        }
+        return response.json()
+      })
+      .then(json => dispatch(deletePageSuccess(json)))
+      .catch(err => dispatch(deletePageFailure(err)))
+  }
+}
+
 export function setPublishStatusFilter (filter) {
   return { type: types.SET_PUBLISH_STATUS_FILTER, filter }
 }

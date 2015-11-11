@@ -34,10 +34,14 @@ function pages (state = {
   isFetching: false,
   isCreating: false,
   isUpdating: false,
+  isDeleting: false,
+  deletingPageId: '',
   updatingPageId: '',
   createFormInputNameValue: '',
   items: []
 }, action) {
+  let index = null
+
   switch (action.type) {
     case types.REQUEST_PAGES:
       return Object.assign({}, state, {
@@ -77,13 +81,33 @@ function pages (state = {
         isUpdating: false
       })
     case types.UPDATE_PAGE_SUCCESS:
-      const index = findIndex(state.items, action.page.id)
+      index = findIndex(state.items, action.page.id)
       return Object.assign({}, state, {
         updatingPageId: '',
         isUpdating: false,
         items: [
           ...state.items.slice(0, index),
           action.page,
+          ...state.items.slice(index + 1)
+        ]
+      })
+    case types.DELETE_PAGE_REQUEST:
+      return Object.assign({}, state, {
+        deletingPageId: action.id,
+        isDeleting: true
+      })
+    case types.DELETE_PAGE_FAILURE:
+      return Object.assign({}, state, {
+        deletingPageId: '',
+        isDeleting: false
+      })
+    case types.DELETE_PAGE_SUCCESS:
+      index = findIndex(state.items, action.page.id)
+      return Object.assign({}, state, {
+        deletingPageId: '',
+        isDeleting: false,
+        items: [
+          ...state.items.slice(0, index),
           ...state.items.slice(index + 1)
         ]
       })

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import {
   fetchPages, setPublishStatusFilter,
   setTextSearchFilter, createPage,
-  updatePage
+  updatePage, deletePage
 } from '../actions'
 import * as PageFilters from '../constants/PageFilters'
 import Pages from '../components/Pages'
@@ -21,6 +21,11 @@ class ListPage extends Component {
     dispatch(updatePage(pageId, {published}))
   }
 
+  onDelete (pageId) {
+    const { dispatch } = this.props
+    dispatch(deletePage(pageId))
+  }
+
   componentDidMount () {
     const { dispatch } = this.props
     dispatch(fetchPages())
@@ -31,6 +36,7 @@ class ListPage extends Component {
       filteredPages, isFetching,
       isCreating, createFormInputNameValue,
       publishStatusFilter, textSearchFilter,
+      isDeleting, deletingPageId,
       dispatch
     } = this.props
 
@@ -57,7 +63,12 @@ class ListPage extends Component {
         }
         {filteredPages.length > 0 &&
           <div style={{ opacity: isFetching ? 0.5 : 1 }}>
-            <Pages pages={filteredPages} onTogglePublish={this.onTogglePublish.bind(this)} />
+            <Pages
+              pages={filteredPages}
+              isDeleting={isDeleting}
+              deletingPageId={deletingPageId}
+              onTogglePublish={this.onTogglePublish.bind(this)}
+              onDelete={this.onDelete.bind(this)} />
           </div>
         }
 
@@ -76,6 +87,8 @@ ListPage.propTypes = {
   filteredPages: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
   isCreating: PropTypes.bool.isRequired,
+  isDeleting: PropTypes.bool.isRequired,
+  deletingPageId: PropTypes.string.isRequired,
   createFormInputNameValue: PropTypes.string.isRequired,
   publishStatusFilter: PropTypes.string.isRequired,
   textSearchFilter: PropTypes.string.isRequired,
@@ -99,12 +112,18 @@ function selectPages (pages, psf, rsf) {
 
 function mapStateToProps (state) {
   const { pages, publishStatusFilter, textSearchFilter } = state
-  const { isFetching, items, createFormInputNameValue, isCreating } = pages
+  const {
+    isFetching, items,
+    createFormInputNameValue, isCreating,
+    isDeleting, deletingPageId
+  } = pages
 
   return {
     filteredPages: selectPages(items, publishStatusFilter, textSearchFilter),
     isFetching,
     isCreating,
+    isDeleting,
+    deletingPageId,
     createFormInputNameValue,
     publishStatusFilter,
     textSearchFilter
