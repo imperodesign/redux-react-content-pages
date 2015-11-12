@@ -140,3 +140,28 @@ export function updateHeader (id, headerParams) {
       .catch(err => dispatch(updateHeaderFailure(err)))
   }
 }
+
+/*
+ * EDIT PAGE (MEDIAS)
+ */
+
+function createMediaRequest () {
+  return { type: types.CREATE_MEDIA_REQUEST }
+}
+
+function createMediaSuccess (json) {
+  return { type: types.CREATE_MEDIA_SUCCESS, media: json }
+}
+
+function createMediaFailure (error) {
+  return { type: types.CREATE_MEDIA_FAILURE, error }
+}
+
+export function createMedia (pageId, type) {
+  return dispatch => {
+    dispatch(createMediaRequest())
+    Request.post(`${PAGES_URL}/${pageId}/medias`, { type })
+      .then(json => dispatch(createMediaSuccess(json)))
+      .catch(err => dispatch(createMediaFailure(err)))
+  }
+}

@@ -2,11 +2,13 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import {
   fetchPage,
-  updateHeader
+  updateHeader,
+  createMedia,
+  updateMedia
 } from '../actions'
 import Header from '../components/Header'
-// import Medias from '../components/Medias'
-// import CreateMediaForm from '../components/CreateMediaForm'
+import Medias from '../components/Medias'
+import CreateMediaForm from '../components/CreateMediaForm'
 
 class EditPage extends Component {
   constructor (props) {
@@ -19,15 +21,26 @@ class EditPage extends Component {
     dispatch(fetchPage(pageid))
   }
 
-  onUpdate (params) {
+  onUpdateHeader (params) {
     const { id, dispatch } = this.props
     dispatch(updateHeader(id, params))
+  }
+
+  onCreateMedia (type) {
+    const { id, dispatch } = this.props
+    dispatch(createMedia(type, id))
+  }
+
+  onUpdateMedia (id, params) {
+    const { dispatch } = this.props
+    dispatch(updateMedia(id, params))
   }
 
   render () {
     const {
       isFetchingPage, id,
-      name, description
+      name, description,
+      medias
     } = this.props
 
     return (
@@ -42,9 +55,11 @@ class EditPage extends Component {
             id={id}
             name={name}
             description={description}
-            onUpdate={this.onUpdate.bind(this)} />
-        }
+            onUpdate={this.onUpdateHeader.bind(this)} />}
 
+        {!isFetchingPage &&
+          <CreateMediaForm
+            onCreate={this.onCreateMedia.bind(this)} />}
       </div>
     )
   }

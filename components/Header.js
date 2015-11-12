@@ -41,7 +41,7 @@ export default class Header extends Component {
           type='text'
           ref='name' />
         <br />
-        Description <input
+        Description: <input
           defaultValue={description}
           onBlur={this.onBlur.bind(this)}
           placeholder={'What\'s the description of your page?'}
