@@ -8,15 +8,14 @@ export default class Medias extends Component {
 
   render () {
     const {
-      onDelete, onUpdate,
-      isDeleting, deletingMediaId
+      onDelete, onUpdate
     } = this.props
 
     const medias = this.props.medias.map((media, i) => {
       switch (media.type) {
         case MediaTypes.TEXT:
           return (
-            <TextMedia
+            <TextMedia key={i}
               id={media.id}
               reference={media.reference}
               name={media.name}
@@ -24,8 +23,6 @@ export default class Medias extends Component {
               onUpdate={onUpdate}
               onDelete={onDelete} />
           )
-          // isDeleting={isDeleting}
-          // deletingMediaId={deletingMediaId}
         default:
           // BOOM! WDF :)
       }
@@ -41,8 +38,6 @@ export default class Medias extends Component {
 
 Medias.propTypes = {
   medias: PropTypes.array.isRequired,
-  // isDeleting: PropTypes.bool.isRequired,
-  // deletingMediaId: PropTypes.string.isRequired,
   onUpdate: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired
 }

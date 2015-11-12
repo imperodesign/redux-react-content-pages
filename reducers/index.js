@@ -122,9 +122,10 @@ function page (state = {
   description: '',
   medias: [],
   isFetchingPage: false,
-  isCreatingMedia: false,
-  isUpdatingMedia: false
+  isCreatingMedia: false
 }, action) {
+  let index = null
+
   switch (action.type) {
     case types.FETCH_PAGE_REQUEST:
       return Object.assign({}, state, {
@@ -146,28 +147,22 @@ function page (state = {
 
     case types.CREATE_MEDIA_REQUEST:
       return Object.assign({}, state, {
-        isToggling: true
+        isCreatingMedia: true
       })
     case types.CREATE_MEDIA_FAILURE:
+      // SHOULD SHOW AN ERROR VIA AN ERROR COMPONENT
       return Object.assign({}, state, {
-        isToggling: false
+        isCreatingMedia: false
       })
     case types.CREATE_MEDIA_SUCCESS:
+      index = findIndex(state.medias, action.media.id)
       return Object.assign({}, state, {
-        isToggling: false
-      })
-
-    case types.UPLOAD_IMAGE_REQUEST:
-      return Object.assign({}, state, {
-        isToggling: true
-      })
-    case types.UPLOAD_IMAGE_FAILURE:
-      return Object.assign({}, state, {
-        isToggling: false
-      })
-    case types.UPLOAD_IMAGE_SUCCESS:
-      return Object.assign({}, state, {
-        isToggling: false
+        isCreatingMedia: false,
+        medias: [
+          ...state.medias.slice(0, index),
+          action.media,
+          ...state.medias.slice(index + 1)
+        ]
       })
 
     default:

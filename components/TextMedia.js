@@ -23,6 +23,9 @@ export default class TextMedia extends Media {
 
     return (
       <div>
+        <br />
+        <b>Text Media</b>
+        <br />
         <form>
           Reference: <input
             type='text'

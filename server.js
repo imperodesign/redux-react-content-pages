@@ -86,6 +86,30 @@ app.delete('/pages/:id', (req, res) => {
   }, 1500)
 })
 
+app.post('/pages/:pageid/medias', (req, res, next) => {
+  // Find the page
+  const page = findPageById(req.params.pageid)
+
+  // Create the new media
+  const media = _.assign({}, req.body)
+  media.id = shortid.generate()
+  media.reference = ''
+
+  if (media.type === 'text') {
+    media.name = ''
+    media.content = ''
+  }
+
+  // OTHER TYPES COMING
+
+  page.medias.push(media)
+
+  // Simulate latency
+  setTimeout(() => {
+    res.json(media)
+  }, 500)
+})
+
 app.get('/pages.json', (req, res) => res.sendFile(`${__dirname}/pages.json`))
 
 app.use('/', (req, res) => res.sendFile(`${__dirname}/index.html`))

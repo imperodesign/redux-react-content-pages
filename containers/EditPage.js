@@ -28,17 +28,17 @@ class EditPage extends Component {
 
   onCreateMedia (type) {
     const { id, dispatch } = this.props
-    dispatch(createMedia(type, id))
+    dispatch(createMedia(id, type))
   }
 
   onUpdateMedia (id, params) {
     const { dispatch } = this.props
-    // dispatch(updateMedia(id, params))
+    dispatch(updateMedia(id, params))
   }
 
   onDeleteMedia (type) {
     const { id, dispatch } = this.props
-    // dispatch(createMedia(type, id))
+    dispatch(createMedia(type, id))
   }
 
   render () {
@@ -67,6 +67,9 @@ class EditPage extends Component {
             medias={medias}
             onUpdate={this.onUpdateMedia.bind(this)}
             onDelete={this.onDeleteMedia.bind(this)} />}
+
+        {!isFetchingPage &&
+          <br /> }
 
         {!isFetchingPage &&
           <CreateMediaForm

@@ -22,7 +22,7 @@
         "id": "media-1",
         "type": "text",
         "reference": "text-media-main",
-        "title": "Yeah! Media 1.",
+        "name": "Yeah! Media 1.",
         "content": "This is awseome."
       }
     ],

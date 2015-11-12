@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import * as MediaTypes from '../constants/MediaTypes'
 
 export default class CreateMediaForm extends Component {
 
@@ -17,10 +18,10 @@ export default class CreateMediaForm extends Component {
       <form>
         <b>Add: </b>
         <button
-          onClick={this.onCreate.bind(this, 'Text')}
+          onClick={this.onCreate.bind(this, MediaTypes.TEXT)}
           type='button'>Text</button>
         <button
-          onClick={this.onCreate.bind(this, 'Image')}
+          onClick={this.onCreate.bind(this, MediaTypes.IMAGE)}
           type='button'>Image</button>
       </form>
     )
