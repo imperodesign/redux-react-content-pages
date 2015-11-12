@@ -58,6 +58,12 @@ class EditPage extends Component {
             onUpdate={this.onUpdateHeader.bind(this)} />}
 
         {!isFetchingPage &&
+          <Medias
+            medias={medias}
+            onUpdate={this.onUpdateMedia.bind(this)}
+            onDelete={this.onDeleteMedia.bind(this)} />}
+
+        {!isFetchingPage &&
           <CreateMediaForm
             onCreate={this.onCreateMedia.bind(this)} />}
       </div>

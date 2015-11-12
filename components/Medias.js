@@ -1,35 +1,48 @@
 import React, { PropTypes, Component } from 'react'
-import Media from './Media'
+import * as MediaTypes from '../constants/MediaTypes'
+import TextMedia from './TextMedia'
+// import ImageMedia from './ImageMedia'
+// import ButtonMedia from './ButtonMedia'
 
 export default class Medias extends Component {
+
   render () {
     const {
-      onTogglePublish, onDelete,
-      isDeleting, deletingPageId
+      onDelete, onUpdate,
+      isDeleting, deletingMediaId
     } = this.props
-    const pages = this.props.pages.map((page, i) =>
-      <Media key={i}
-        id={page.id}
-        name={page.name}
-        published={page.published}
-        isDeleting={isDeleting}
-        deletingPageId={deletingPageId}
-        onTogglePublish={onTogglePublish}
-        onDelete={onDelete}
-        />
-    )
+
+    const medias = this.props.medias.map((media, i) => {
+      switch (media.type) {
+        case MediaTypes.TEXT:
+          return (
+            <TextMedia
+              id={media.id}
+              reference={media.reference}
+              name={media.name}
+              content={media.content}
+              isDeleting={isDeleting}
+              deletingMediaId={deletingMediaId}
+              onUpdate={onUpdate}
+              onDelete={onDelete} />
+          )
+        default:
+          // BOOM! WDF :)
+      }
+    })
+
     return (
-      <ul>
-        {pages}
-      </ul>
+      <div>
+        {medias}
+      </div>
     )
   }
 }
 
 Medias.propTypes = {
-  pages: PropTypes.array.isRequired,
+  medias: PropTypes.array.isRequired,
   isDeleting: PropTypes.bool.isRequired,
-  deletingPageId: PropTypes.string.isRequired,
-  onTogglePublish: PropTypes.func.isRequired,
+  deletingMediaId: PropTypes.string.isRequired,
+  onUpdate: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired
 }
