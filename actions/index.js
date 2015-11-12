@@ -187,5 +187,25 @@ export function updateMedia (pageId, mediaId, params) {
   }
 }
 
-// var data = new FormData()
-// data.append('file', input.files[0])
+function uploadFileMediaRequest (mediaId) {
+  return { type: types.UPLOAD_FILE_MEDIA_REQUEST, mediaId }
+}
+
+function uploadFileMediaSuccess (json) {
+  return { type: types.UPLOAD_FILE_MEDIA_REQUEST, media: json }
+}
+
+function uploadFileMediaFailure (error) {
+  return { type: types.UPLOAD_FILE_MEDIA_REQUEST, error }
+}
+
+export function uploadFileMedia (pageId, mediaId, file) {
+  return dispatch => {
+    dispatch(uploadFileMediaRequest(mediaId))
+    const data = new window.FormData()
+    data.append('file', file)
+    Request.post(`${PAGES_URL}/${pageId}/medias/${mediaId}/files`, null, data)
+      .then(json => dispatch(uploadFileMediaSuccess(json)))
+      .catch(err => dispatch(uploadFileMediaFailure(err)))
+  }
+}

@@ -14,14 +14,14 @@ export class Request {
       .then(Request._handleResponse)
   }
 
-  static post (url, params) {
+  static post (url, params, data) {
     return fetch(url, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(params)
+      body: params ? JSON.stringify(params) : data
     })
       .then(Request._handleResponse)
   }
