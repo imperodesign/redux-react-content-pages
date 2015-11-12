@@ -1,8 +1,8 @@
-import fetch from 'isomorphic-fetch'
+import { Request } from '../middlewares/api'
 import * as types from '../constants/ActionTypes'
 import { PAGES_URL } from '../constants/URLs'
 
-function requestPages (reddit) {
+function requestPages () {
   return {
     type: types.REQUEST_PAGES
   }
@@ -18,13 +18,7 @@ function receivePages (json) {
 export function fetchPages () {
   return dispatch => {
     dispatch(requestPages())
-    return fetch(PAGES_URL)
-      .then(response => {
-        if (response.status > 399) {
-          throw new Error(`${response.status} - ${response.statusText}`)
-        }
-        return response.json()
-      })
+    Request.get(PAGES_URL)
       .then(json => dispatch(receivePages(json)))
       .catch(err => console.error(err))
   }
@@ -45,56 +39,30 @@ function createPageFailure (error) {
 export function createPage (name) {
   return dispatch => {
     dispatch(createPageRequest(name))
-    return fetch(PAGES_URL, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name })
-    })
-      .then(response => {
-        if (response.status > 399) {
-          throw new Error(`${response.status} - ${response.statusText}`)
-        }
-        return response.json()
-      })
+    Request.post(PAGES_URL, { name })
       .then(json => dispatch(createPageSuccess(json)))
       .catch(err => dispatch(createPageFailure(err)))
   }
 }
 
-function updatePageRequest (id, params) {
-  return { type: types.UPDATE_PAGE_REQUEST, id, params }
+function togglePublishRequest (id, params) {
+  return { type: types.TOGGLE_PUBLISH_REQUEST, id, params }
 }
 
-function updatePageSuccess (json) {
-  return { type: types.UPDATE_PAGE_SUCCESS, page: json }
+function togglePublishSuccess (json) {
+  return { type: types.TOGGLE_PUBLISH_SUCCESS, page: json }
 }
 
-function updatePageFailure (error) {
-  return { type: types.UPDATE_PAGE_FAILURE, error }
+function togglePublishFailure (error) {
+  return { type: types.TOGGLE_PUBLISH_FAILURE, error }
 }
 
-export function updatePage (id, params) {
+export function togglePublish (id, params) {
   return dispatch => {
-    dispatch(updatePageRequest(id))
-    return fetch(`${PAGES_URL}/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(params)
-    })
-      .then(response => {
-        if (response.status > 399) {
-          throw new Error(`${response.status} - ${response.statusText}`)
-        }
-        return response.json()
-      })
-      .then(json => dispatch(updatePageSuccess(json)))
-      .catch(err => dispatch(updatePageFailure(err)))
+    dispatch(togglePublishRequest(id))
+    Request.put(`${PAGES_URL}/${id}`, params)
+      .then(json => dispatch(togglePublishSuccess(json)))
+      .catch(err => dispatch(togglePublishFailure(err)))
   }
 }
 
@@ -113,19 +81,7 @@ function deletePageFailure (error) {
 export function deletePage (id, params) {
   return dispatch => {
     dispatch(deletePageRequest(id))
-    return fetch(`${PAGES_URL}/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        if (response.status > 399) {
-          throw new Error(`${response.status} - ${response.statusText}`)
-        }
-        return response.json()
-      })
+    Request.delete(`${PAGES_URL}/${id}`)
       .then(json => dispatch(deletePageSuccess(json)))
       .catch(err => dispatch(deletePageFailure(err)))
   }
@@ -138,3 +94,49 @@ export function setPublishStatusFilter (filter) {
 export function setTextSearchFilter (filter) {
   return { type: types.SET_TEXT_SEARCH_FILTER, filter }
 }
+
+/*
+ * EDIT PAGE
+ */
+
+function fetchPageRequest (id) {
+  return { type: types.FETCH_PAGE_REQUEST, id }
+}
+
+function fetchPageSuccess (json) {
+  return { type: types.FETCH_PAGE_SUCCESS, page: json }
+}
+
+function fetchPageFailure (error) {
+  return { type: types.FETCH_PAGE_FAILURE, error }
+}
+
+export function fetchPage (id) {
+  return dispatch => {
+    dispatch(fetchPageRequest(id))
+    Request.get(`${PAGES_URL}/${id}`)
+      .then(json => dispatch(fetchPageSuccess(json)))
+      .catch(err => fetchPageFailure(err))
+  }
+}
+//
+// function togglePublishRequest (id, params) {
+//   return { type: types.TOGGLE_PUBLISH_REQUEST, id, params }
+// }
+//
+// function togglePublishSuccess (json) {
+//   return { type: types.TOGGLE_PUBLISH_SUCCESS, page: json }
+// }
+//
+// function togglePublishFailure (error) {
+//   return { type: types.TOGGLE_PUBLISH_FAILURE, error }
+// }
+//
+// export function togglePublish (id, params) {
+//   return dispatch => {
+//     dispatch(togglePublishRequest(id))
+//     fetchUpdate(`${PAGES_URL}/${id}`, params)
+//       .then(json => dispatch(togglePublishSuccess(json)))
+//       .catch(err => dispatch(togglePublishFailure(err)))
+//   }
+// }

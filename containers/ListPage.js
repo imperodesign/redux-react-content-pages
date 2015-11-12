@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import {
   fetchPages, setPublishStatusFilter,
   setTextSearchFilter, createPage,
-  updatePage, deletePage
+  togglePublish, deletePage
 } from '../actions'
 import * as PageFilters from '../constants/PageFilters'
 import Pages from '../components/Pages'
@@ -18,7 +18,7 @@ class ListPage extends Component {
 
   onTogglePublish (pageId, published) {
     const { dispatch } = this.props
-    dispatch(updatePage(pageId, {published}))
+    dispatch(togglePublish(pageId, {published}))
   }
 
   onDelete (pageId) {

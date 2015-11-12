@@ -33,10 +33,10 @@ function findIndex (list, id) {
 function pages (state = {
   isFetching: false,
   isCreating: false,
-  isUpdating: false,
+  isToggling: false,
   isDeleting: false,
   deletingPageId: '',
-  updatingPageId: '',
+  togglingPageId: '',
   createFormInputNameValue: '',
   items: []
 }, action) {
@@ -70,21 +70,21 @@ function pages (state = {
           action.page
         ]
       })
-    case types.UPDATE_PAGE_REQUEST:
+    case types.TOGGLE_PUBLISH_REQUEST:
       return Object.assign({}, state, {
-        updatingPageId: action.id,
-        isUpdating: true
+        togglingPageId: action.id,
+        isToggling: true
       })
-    case types.UPDATE_PAGE_FAILURE:
+    case types.TOGGLE_PUBLISH_FAILURE:
       return Object.assign({}, state, {
-        updatingPageId: '',
-        isUpdating: false
+        togglingPageId: '',
+        isToggling: false
       })
-    case types.UPDATE_PAGE_SUCCESS:
+    case types.TOGGLE_PUBLISH_SUCCESS:
       index = findIndex(state.items, action.page.id)
       return Object.assign({}, state, {
-        updatingPageId: '',
-        isUpdating: false,
+        togglingPageId: '',
+        isToggling: false,
         items: [
           ...state.items.slice(0, index),
           action.page,
@@ -116,10 +116,70 @@ function pages (state = {
   }
 }
 
+function page (state = {
+  id: '',
+  name: '',
+  description: '',
+  medias: [],
+  isFetchingPage: false,
+  isCreatingMedia: false,
+  isUpdatingMedia: false
+}, action) {
+  switch (action.type) {
+    case types.FETCH_PAGE_REQUEST:
+      return Object.assign({}, state, {
+        isFetchingPage: true
+      })
+    case types.FETCH_PAGE_FAILURE:
+      return Object.assign({}, state, {
+        isFetchingPage: false,
+        page: action.page
+      })
+    case types.FETCH_PAGE_SUCCESS:
+      return Object.assign({}, state, {
+        isFetchingPage: false,
+        id: action.page.id,
+        name: action.page.name,
+        description: action.page.description,
+        medias: action.page.medias
+      })
+
+    case types.CREATE_MEDIA_REQUEST:
+      return Object.assign({}, state, {
+        isToggling: true
+      })
+    case types.CREATE_MEDIA_FAILURE:
+      return Object.assign({}, state, {
+        isToggling: false
+      })
+    case types.CREATE_MEDIA_SUCCESS:
+      return Object.assign({}, state, {
+        isToggling: false
+      })
+
+    case types.UPLOAD_IMAGE_REQUEST:
+      return Object.assign({}, state, {
+        isToggling: true
+      })
+    case types.UPLOAD_IMAGE_FAILURE:
+      return Object.assign({}, state, {
+        isToggling: false
+      })
+    case types.UPLOAD_IMAGE_SUCCESS:
+      return Object.assign({}, state, {
+        isToggling: false
+      })
+
+    default:
+      return state
+  }
+}
+
 const rootReducer = combineReducers({
   publishStatusFilter,
   textSearchFilter,
   pages,
+  page,
   router
 })
 

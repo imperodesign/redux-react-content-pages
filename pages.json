@@ -2,21 +2,37 @@
   {
     "id": "page-1",
     "name": "Page 1",
+    "description": "This is a simple description",
+    "medias": [],
     "published": true
   },
   {
     "id": "page-2",
     "name": "Page 2",
+    "description": "This is a simple description",
+    "medias": [],
     "published": false
   },
   {
     "id": "page-3",
     "name": "Page 3",
+    "description": "",
+    "medias": [
+      {
+        "id": "media-1",
+        "type": "text",
+        "reference": "text-media-main",
+        "title": "Yeah! Media 1.",
+        "content": "This is awseome."
+      }
+    ],
     "published": true
   },
   {
     "id": "page-4",
     "name": "Page 4",
+    "description": "Page 4 is a page example",
+    "medias": [],
     "published": false
   }
 ]
