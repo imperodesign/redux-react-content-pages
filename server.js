@@ -29,6 +29,15 @@ function findPageById (id) {
   return page
 }
 
+function updateMediaById (medias, id, params) {
+  let media = null
+  for (let i = 0; i < medias.length; i++) {
+    medias[i] = _.assign(medias[i], params)
+    media = medias[i]
+  }
+  return media
+}
+
 function updatePageById (id, params) {
   let page = null
   for (let i = 0; i < pages.length; i++) {
@@ -88,9 +97,9 @@ app.delete('/pages/:id', (req, res) => {
   }, 1500)
 })
 
-app.post('/pages/:pageid/medias', (req, res, next) => {
+app.post('/pages/:pageId/medias', (req, res, next) => {
   // Find the page
-  const page = findPageById(req.params.pageid)
+  const page = findPageById(req.params.pageId)
 
   // Create the new media
   const media = _.assign({}, req.body)
@@ -108,6 +117,19 @@ app.post('/pages/:pageid/medias', (req, res, next) => {
   // OTHER TYPES COMING
 
   page.medias.push(media)
+
+  // Simulate latency
+  setTimeout(() => {
+    res.json(media)
+  }, 500)
+})
+
+app.put('/pages/:pageId/medias/:mediaId', (req, res, next) => {
+  // Find the page
+  const page = findPageById(req.params.pageId)
+
+  // Find the media
+  const media = updateMediaById(page.medias, req.params.mediaId, req.body)
 
   // Simulate latency
   setTimeout(() => {

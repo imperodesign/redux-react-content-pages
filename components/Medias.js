@@ -8,7 +8,7 @@ export default class Medias extends Component {
 
   render () {
     const {
-      onDelete, onUpdate, onUploadImage
+      onDelete, onUpdate, onUploadFileMedia
     } = this.props
 
     const medias = this.props.medias.map((media, i) => {
@@ -31,7 +31,7 @@ export default class Medias extends Component {
               caption={media.caption}
               filepath={media.filepath}
               onUpdate={onUpdate}
-              onUploadImage={onUploadImage}
+              onUploadImage={onUploadFileMedia}
               onDelete={onDelete} />
           )
         default:
@@ -50,6 +50,6 @@ export default class Medias extends Component {
 Medias.propTypes = {
   medias: PropTypes.array.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  onUploadImage: PropTypes.func.isRequired,
+  onUploadFileMedia: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired
 }

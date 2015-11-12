@@ -4,7 +4,8 @@ import {
   fetchPage,
   updateHeader,
   createMedia,
-  updateMedia
+  updateMedia,
+  uploadFileMedia
 } from '../actions'
 import Header from '../components/Header'
 import Medias from '../components/Medias'
@@ -31,15 +32,16 @@ class EditPage extends Component {
     dispatch(createMedia(id, type))
   }
 
-  onUpdateMedia (id, params) {
-    const { dispatch } = this.props
-    dispatch(updateMedia(id, params))
+  onUpdateMedia (idMedia, params) {
+    // id -> idPage
+    const { dispatch, id } = this.props
+    dispatch(updateMedia(id, idMedia, params))
   }
 
-  onUploadImage (id, file) {
-    // const { dispatch } = this.props
-    console.log(file)
-    // dispact something
+  onUploadFileMedia (idMedia, file) {
+    // id -> idPage
+    const { dispatch, id } = this.props
+    dispatch(uploadFileMedia(id, idMedia, file))
   }
 
   onDeleteMedia (type) {
@@ -72,7 +74,7 @@ class EditPage extends Component {
           <Medias
             medias={medias}
             onUpdate={this.onUpdateMedia.bind(this)}
-            onUploadImage={this.onUploadImage.bind(this)}
+            onUploadFileMedia={this.onUploadFileMedia.bind(this)}
             onDelete={this.onDeleteMedia.bind(this)} />}
 
         {!isFetchingPage &&

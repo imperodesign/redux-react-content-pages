@@ -165,6 +165,11 @@ function page (state = {
         ]
       })
 
+    // TODO:
+    // MISSING UPDATE_PAGE
+    // MISSING UPDATE_MEDIA
+    // MISSING UPLOAD_FILE_MEDIA
+
     default:
       return state
   }

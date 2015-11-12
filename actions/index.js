@@ -166,8 +166,8 @@ export function createMedia (pageId, type) {
   }
 }
 
-function updateMediaRequest () {
-  return { type: types.UPDATE_MEDIA_REQUEST }
+function updateMediaRequest (mediaId) {
+  return { type: types.UPDATE_MEDIA_REQUEST, mediaId }
 }
 
 function updateMediaSuccess (json) {
@@ -178,11 +178,14 @@ function updateMediaFailure (error) {
   return { type: types.UPDATE_MEDIA_REQUEST, error }
 }
 
-export function createMedia (pageId, type) {
+export function updateMedia (pageId, mediaId, params) {
   return dispatch => {
-    dispatch(createMediaRequest())
-    Request.post(`${PAGES_URL}/${pageId}/medias`, { type })
-      .then(json => dispatch(createMediaSuccess(json)))
-      .catch(err => dispatch(createMediaFailure(err)))
+    dispatch(updateMediaRequest(mediaId))
+    Request.put(`${PAGES_URL}/${pageId}/medias/${mediaId}`, params)
+      .then(json => dispatch(updateMediaSuccess(json)))
+      .catch(err => dispatch(updateMediaFailure(err)))
   }
 }
+
+// var data = new FormData()
+// data.append('file', input.files[0])

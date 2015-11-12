@@ -18,8 +18,7 @@ export default class ImageMedia extends Media {
     e.preventDefault()
     onUpdate(id, {
       reference: this.refs.reference.value,
-      name: this.refs.name.value,
-      content: this.refs.content.value
+      caption: this.refs.caption.value
     })
   }
 
@@ -50,7 +49,7 @@ export default class ImageMedia extends Media {
           Caption: <input
             type='text'
             defaultValue={caption}
-            ref='name'
+            ref='caption'
             onBlur={this.update.bind(this)} />
           <br />
           {filepath !== '' &&
