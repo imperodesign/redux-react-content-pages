@@ -33,13 +33,13 @@ export default class TextMedia extends Media {
             ref='reference'
             onBlur={this.onBlur.bind(this)} />
           <br />
-          <input
+          Name: <input
             type='text'
             defaultValue={name}
             ref='name'
             onBlur={this.onBlur.bind(this)} />
           <br />
-          <input
+          Content: <textarea
             type='text'
             defaultValue={content}
             ref='content'

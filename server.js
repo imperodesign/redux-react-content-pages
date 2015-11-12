@@ -63,7 +63,9 @@ app.get('/pages/:id', (req, res) => res.json(findPageById(req.params.id)))
 app.post('/pages', (req, res) => {
   const page = _.assign({}, req.body)
   page.id = shortid.generate()
+  page.description = ''
   page.published = false
+  page.medias = []
   pages.push(page)
 
   // Simulate latency
