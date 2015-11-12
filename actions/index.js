@@ -45,8 +45,8 @@ export function createPage (name) {
   }
 }
 
-function togglePublishRequest (id, params) {
-  return { type: types.TOGGLE_PUBLISH_REQUEST, id, params }
+function togglePublishRequest (id) {
+  return { type: types.TOGGLE_PUBLISH_REQUEST, id }
 }
 
 function togglePublishSuccess (json) {
@@ -57,17 +57,17 @@ function togglePublishFailure (error) {
   return { type: types.TOGGLE_PUBLISH_FAILURE, error }
 }
 
-export function togglePublish (id, params) {
+export function togglePublish (id, published) {
   return dispatch => {
     dispatch(togglePublishRequest(id))
-    Request.put(`${PAGES_URL}/${id}`, params)
+    Request.put(`${PAGES_URL}/${id}`, { published })
       .then(json => dispatch(togglePublishSuccess(json)))
       .catch(err => dispatch(togglePublishFailure(err)))
   }
 }
 
 function deletePageRequest (id, params) {
-  return { type: types.DELETE_PAGE_REQUEST, id, params }
+  return { type: types.DELETE_PAGE_REQUEST, id }
 }
 
 function deletePageSuccess (json) {
@@ -78,7 +78,7 @@ function deletePageFailure (error) {
   return { type: types.DELETE_PAGE_FAILURE, error }
 }
 
-export function deletePage (id, params) {
+export function deletePage (id) {
   return dispatch => {
     dispatch(deletePageRequest(id))
     Request.delete(`${PAGES_URL}/${id}`)
@@ -119,24 +119,24 @@ export function fetchPage (id) {
       .catch(err => fetchPageFailure(err))
   }
 }
-//
-// function togglePublishRequest (id, params) {
-//   return { type: types.TOGGLE_PUBLISH_REQUEST, id, params }
-// }
-//
-// function togglePublishSuccess (json) {
-//   return { type: types.TOGGLE_PUBLISH_SUCCESS, page: json }
-// }
-//
-// function togglePublishFailure (error) {
-//   return { type: types.TOGGLE_PUBLISH_FAILURE, error }
-// }
-//
-// export function togglePublish (id, params) {
-//   return dispatch => {
-//     dispatch(togglePublishRequest(id))
-//     fetchUpdate(`${PAGES_URL}/${id}`, params)
-//       .then(json => dispatch(togglePublishSuccess(json)))
-//       .catch(err => dispatch(togglePublishFailure(err)))
-//   }
-// }
+
+function updateHeaderRequest (id) {
+  return { type: types.UPDATE_HEADER_REQUEST, id }
+}
+
+function updateHeaderSuccess (json) {
+  return { type: types.UPDATE_HEADER_SUCCESS, page: json }
+}
+
+function updateHeaderFailure (error) {
+  return { type: types.UPDATE_HEADER_FAILURE, error }
+}
+
+export function updateHeader (id, headerParams) {
+  return dispatch => {
+    dispatch(updateHeaderRequest(id))
+    Request.put(`${PAGES_URL}/${id}`, headerParams)
+      .then(json => dispatch(updateHeaderSuccess(json)))
+      .catch(err => dispatch(updateHeaderFailure(err)))
+  }
+}

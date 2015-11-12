@@ -18,7 +18,7 @@ class ListPage extends Component {
 
   onTogglePublish (pageId, published) {
     const { dispatch } = this.props
-    dispatch(togglePublish(pageId, {published}))
+    dispatch(togglePublish(pageId, published))
   }
 
   onDelete (pageId) {

@@ -11,7 +11,7 @@ export default class Header extends Component {
     e.preventDefault()
     onUpdate({
       name: this.refs.name.value,
-      description: this.refs.name.value
+      description: this.refs.description.value
     })
   }
 
