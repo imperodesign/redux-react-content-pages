@@ -36,6 +36,12 @@ class EditPage extends Component {
     dispatch(updateMedia(id, params))
   }
 
+  onUploadImage (id, file) {
+    // const { dispatch } = this.props
+    console.log(file)
+    // dispact something
+  }
+
   onDeleteMedia (type) {
     const { id, dispatch } = this.props
     dispatch(createMedia(type, id))
@@ -66,6 +72,7 @@ class EditPage extends Component {
           <Medias
             medias={medias}
             onUpdate={this.onUpdateMedia.bind(this)}
+            onUploadImage={this.onUploadImage.bind(this)}
             onDelete={this.onDeleteMedia.bind(this)} />}
 
         {!isFetchingPage &&

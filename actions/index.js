@@ -165,3 +165,24 @@ export function createMedia (pageId, type) {
       .catch(err => dispatch(createMediaFailure(err)))
   }
 }
+
+function updateMediaRequest () {
+  return { type: types.UPDATE_MEDIA_REQUEST }
+}
+
+function updateMediaSuccess (json) {
+  return { type: types.UPDATE_MEDIA_REQUEST, media: json }
+}
+
+function updateMediaFailure (error) {
+  return { type: types.UPDATE_MEDIA_REQUEST, error }
+}
+
+export function createMedia (pageId, type) {
+  return dispatch => {
+    dispatch(createMediaRequest())
+    Request.post(`${PAGES_URL}/${pageId}/medias`, { type })
+      .then(json => dispatch(createMediaSuccess(json)))
+      .catch(err => dispatch(createMediaFailure(err)))
+  }
+}

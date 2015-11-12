@@ -27,6 +27,7 @@
   },
   "homepage": "http://rackt.github.io/redux",
   "dependencies": {
+    "attr-accept": "^1.0.3",
     "history": "^1.13.0",
     "isomorphic-fetch": "^2.1.1",
     "react": "^0.14.0",

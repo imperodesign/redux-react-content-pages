@@ -100,6 +100,9 @@ app.post('/pages/:pageid/medias', (req, res, next) => {
   if (media.type === 'text') {
     media.name = ''
     media.content = ''
+  } else if (media.type === 'image') {
+    media.caption = ''
+    media.filepath = ''
   }
 
   // OTHER TYPES COMING

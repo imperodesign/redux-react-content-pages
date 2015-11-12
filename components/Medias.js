@@ -1,14 +1,14 @@
 import React, { PropTypes, Component } from 'react'
 import * as MediaTypes from '../constants/MediaTypes'
 import TextMedia from './TextMedia'
-// import ImageMedia from './ImageMedia'
+import ImageMedia from './ImageMedia'
 // import ButtonMedia from './ButtonMedia'
 
 export default class Medias extends Component {
 
   render () {
     const {
-      onDelete, onUpdate
+      onDelete, onUpdate, onUploadImage
     } = this.props
 
     const medias = this.props.medias.map((media, i) => {
@@ -21,6 +21,17 @@ export default class Medias extends Component {
               name={media.name}
               content={media.content}
               onUpdate={onUpdate}
+              onDelete={onDelete} />
+          )
+        case MediaTypes.IMAGE:
+          return (
+            <ImageMedia key={i}
+              id={media.id}
+              reference={media.reference}
+              caption={media.caption}
+              filepath={media.filepath}
+              onUpdate={onUpdate}
+              onUploadImage={onUploadImage}
               onDelete={onDelete} />
           )
         default:
@@ -39,5 +50,6 @@ export default class Medias extends Component {
 Medias.propTypes = {
   medias: PropTypes.array.isRequired,
   onUpdate: PropTypes.func.isRequired,
+  onUploadImage: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired
 }
