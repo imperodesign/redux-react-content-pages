@@ -33,7 +33,12 @@ class EditPage extends Component {
 
   onUpdateMedia (id, params) {
     const { dispatch } = this.props
-    dispatch(updateMedia(id, params))
+    // dispatch(updateMedia(id, params))
+  }
+
+  onDeleteMedia (type) {
+    const { id, dispatch } = this.props
+    // dispatch(createMedia(type, id))
   }
 
   render () {

@@ -21,11 +21,11 @@ export default class Medias extends Component {
               reference={media.reference}
               name={media.name}
               content={media.content}
-              isDeleting={isDeleting}
-              deletingMediaId={deletingMediaId}
               onUpdate={onUpdate}
               onDelete={onDelete} />
           )
+          // isDeleting={isDeleting}
+          // deletingMediaId={deletingMediaId}
         default:
           // BOOM! WDF :)
       }
@@ -41,8 +41,8 @@ export default class Medias extends Component {
 
 Medias.propTypes = {
   medias: PropTypes.array.isRequired,
-  isDeleting: PropTypes.bool.isRequired,
-  deletingMediaId: PropTypes.string.isRequired,
+  // isDeleting: PropTypes.bool.isRequired,
+  // deletingMediaId: PropTypes.string.isRequired,
   onUpdate: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired
 }
