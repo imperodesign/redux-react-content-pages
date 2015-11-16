@@ -1,10 +1,9 @@
 import React, { PropTypes } from 'react'
 import Media from './Media'
-import List from './List'
 import Uploader from './Uploader'
 
 // Extends Media class
-export default class ImageMedia extends Media {
+export default class GalleryMedia extends Media {
 
   constructor (props) {
     super(props)
@@ -28,10 +27,6 @@ export default class ImageMedia extends Media {
     e.preventDefault()
     if (files.length > 0) onUploadImage(id, files[0])
     else console.error('Files[] is empty... and this is wrong.')
-  }
-
-  handleSort () {
-    console.log('sorting...')
   }
 
   render () {
@@ -58,10 +53,6 @@ export default class ImageMedia extends Media {
             onBlur={this.update.bind(this)} />
           <br />
           {filepath !== '' &&
-            <div>
-               <List key={Math.random()} data={[Math.random(), Math.random(), Math.random()]} />
-            </div>}
-          {filepath !== '' &&
             <img
               style={{ width: '64px', height: '64px' }}
               src={`/files/${filepath}`} />}
@@ -75,7 +66,7 @@ export default class ImageMedia extends Media {
   }
 }
 
-ImageMedia.propTypes = Object.assign({}, Media.propTypes, {
+GalleryMedia.propTypes = Object.assign({}, Media.propTypes, {
   caption: PropTypes.string.isRequired,
   filepath: PropTypes.string.isRequired,
   onUpdate: PropTypes.func.isRequired,

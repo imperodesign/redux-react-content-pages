@@ -200,7 +200,6 @@ function uploadFileMediaFailure (error) {
 }
 
 export function uploadFileMedia (pageId, mediaId, file) {
-  console.log('Uploading...')
   return dispatch => {
     dispatch(uploadFileMediaRequest(mediaId))
     const data = new window.FormData()
