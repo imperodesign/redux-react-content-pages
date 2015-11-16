@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react'
 import * as MediaTypes from '../constants/MediaTypes'
 import TextMedia from './TextMedia'
 import ImageMedia from './ImageMedia'
-// import ButtonMedia from './ButtonMedia'
+import GalleryMedia from './GalleryMedia'
 
 export default class Medias extends Component {
 
@@ -30,6 +30,17 @@ export default class Medias extends Component {
               reference={media.reference}
               caption={media.caption}
               filepath={media.filepath}
+              onUpdate={onUpdate}
+              onUploadImage={onUploadFileMedia}
+              onDelete={onDelete} />
+          )
+        case MediaTypes.GALLERY:
+          return (
+            <GalleryMedia key={i}
+              id={media.id}
+              reference={media.reference}
+              name={media.name}
+              filepaths={media.filepaths}
               onUpdate={onUpdate}
               onUploadImage={onUploadFileMedia}
               onDelete={onDelete} />

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import Media from './Media'
-import List from './List'
+import SortableImageList from './SortableImageList'
 import Uploader from './Uploader'
 
 // Extends Media class
@@ -19,7 +19,7 @@ export default class GalleryMedia extends Media {
     e.preventDefault()
     onUpdate(id, {
       reference: this.refs.reference.value,
-      caption: this.refs.caption.value
+      name: this.refs.name.value
     })
   }
 
@@ -36,13 +36,13 @@ export default class GalleryMedia extends Media {
 
   render () {
     const {
-      reference, caption, filepath
+      reference, name, filepaths
     } = this.props
 
     return (
       <div>
         <br />
-        <b>Image Media</b>
+        <b>Gallery Media</b>
         <br />
         <form>
           Reference: <input
@@ -51,22 +51,18 @@ export default class GalleryMedia extends Media {
             ref='reference'
             onBlur={this.update.bind(this)} />
           <br />
-          Caption: <input
+          Name: <input
             type='text'
-            defaultValue={caption}
-            ref='caption'
+            defaultValue={name}
+            ref='name'
             onBlur={this.update.bind(this)} />
           <br />
-          {filepath !== '' &&
-            <div>
-               <List
-                key={Math.random()}
-                data={[Math.random(), Math.random(), Math.random()]} />
-            </div>}
-          {filepath !== '' &&
-            <img
-              style={{ width: '64px', height: '64px' }}
-              src={`/files/${filepath}`} />}
+          {filepaths.length > 0 &&
+            <SortableImageList
+              key={Math.random()}
+              data={filepaths} />}
+          {filepaths.length > 0 &&
+            <br />}
           <Uploader
             multiple={this.multiple}
             accept={this.accept}
@@ -78,8 +74,8 @@ export default class GalleryMedia extends Media {
 }
 
 GalleryMedia.propTypes = Object.assign({}, Media.propTypes, {
-  caption: PropTypes.string.isRequired,
-  filepath: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  filepaths: PropTypes.array.isRequired,
   onUpdate: PropTypes.func.isRequired,
   onUploadImage: PropTypes.func.isRequired
 })

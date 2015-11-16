@@ -10,12 +10,20 @@
       }
       li {
         padding: 5px;
-        background:#eee
+        background:#eee;
+        float: left;
       }
-      li.placeholder {background: rgb(255,240,120);}
+      li.placeholder {
+        background: rgb(255,240,120);
+      }
       li.placeholder:before {
         content: "Drop here";
         color: rgb(225,210,90);
+        min-width: 64px;
+        max-width: 64px;
+        min-height: 64px;
+        max-height: 64px;
+        display: block;
       }
     </style>
   </head>

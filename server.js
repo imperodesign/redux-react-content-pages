@@ -37,8 +37,18 @@ function findPageById (id) {
 function updateMediaById (medias, id, params) {
   let media = null
   for (let i = 0; i < medias.length; i++) {
-    medias[i] = _.assign(medias[i], params)
-    media = medias[i]
+    if (medias[i].id === id) {
+      medias[i] = _.assign(medias[i], params)
+      media = medias[i]
+    }
+  }
+  return media
+}
+
+function findMediaById (medias, id) {
+  let media = null
+  for (let i = 0; i < medias.length; i++) {
+    if (medias[i].id === id) media = medias[i]
   }
   return media
 }
@@ -117,6 +127,9 @@ app.post('/pages/:pageId/medias', urlEncoder, jsonParser, (req, res, next) => {
   } else if (media.type === 'image') {
     media.caption = ''
     media.filepath = ''
+  } else if (media.type === 'gallery') {
+    media.name = ''
+    media.filepaths = []
   }
 
   // OTHER TYPES COMING
@@ -162,9 +175,18 @@ app.post('/pages/:pageId/medias/:mediaId/files', (req, res, next) => {
     const page = findPageById(req.params.pageId)
 
     // Find the media
-    const media = updateMediaById(page.medias, req.params.mediaId, {
-      filepath: _filepath
-    })
+    let media = findMediaById(page.medias, req.params.mediaId)
+
+    let updateParams = { filepath: _filepath }
+
+    if (media.type === 'gallery') {
+      updateParams = {
+        filepaths: media.filepaths.concat([_filepath])
+      }
+    }
+
+    // Update the media
+    media = updateMediaById(page.medias, req.params.mediaId, updateParams)
 
     res.json(media)
   })
