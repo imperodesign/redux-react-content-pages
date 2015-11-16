@@ -55,7 +55,7 @@ export default class ImageMedia extends Media {
           {filepath !== '' &&
             <img
               style={{ width: '64px', height: '64px' }}
-              src={filepath} />}
+              src={`/files/${filepath}`} />}
           <Uploader
             multiple={this.multiple}
             accept={this.accept}

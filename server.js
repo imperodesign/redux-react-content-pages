@@ -1,25 +1,30 @@
 'use strict'
 
 const fs = require('fs')
+const path = require('path')
 const shortid = require('shortid')
 const _ = require('lodash')
+const express = require('express')
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const bodyParser = require('body-parser')
+const Busboy = require('busboy')
 const config = require('./webpack.config')
 
-const app = new (require('express'))()
+const app = express()
 const port = 3000
 
 let pages = JSON.parse(fs.readFileSync(`${__dirname}/pages.json`))
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+const urlEncoder = bodyParser.urlencoded({ extended: false })
+const jsonParser = bodyParser.json()
 
 const compiler = webpack(config)
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
 app.use(webpackHotMiddleware(compiler))
+
+app.use('/files', express.static(`${__dirname}/tmp`))
 
 function findPageById (id) {
   let page = null
@@ -69,7 +74,7 @@ app.get('/pages', (req, res) => res.json(pages))
 
 app.get('/pages/:id', (req, res) => res.json(findPageById(req.params.id)))
 
-app.post('/pages', (req, res) => {
+app.post('/pages', urlEncoder, jsonParser, (req, res) => {
   const page = _.assign({}, req.body)
   page.id = shortid.generate()
   page.description = ''
@@ -83,7 +88,7 @@ app.post('/pages', (req, res) => {
   }, 3000)
 })
 
-app.put('/pages/:id', (req, res) => {
+app.put('/pages/:id', urlEncoder, jsonParser, (req, res) => {
   // Simulate latency
   setTimeout(() => {
     res.json(updatePageById(req.params.id, req.body))
@@ -97,7 +102,7 @@ app.delete('/pages/:id', (req, res) => {
   }, 1500)
 })
 
-app.post('/pages/:pageId/medias', (req, res, next) => {
+app.post('/pages/:pageId/medias', urlEncoder, jsonParser, (req, res, next) => {
   // Find the page
   const page = findPageById(req.params.pageId)
 
@@ -124,7 +129,7 @@ app.post('/pages/:pageId/medias', (req, res, next) => {
   }, 500)
 })
 
-app.put('/pages/:pageId/medias/:mediaId', (req, res, next) => {
+app.put('/pages/:pageId/medias/:mediaId', urlEncoder, jsonParser, (req, res, next) => {
   // Find the page
   const page = findPageById(req.params.pageId)
 
@@ -135,6 +140,36 @@ app.put('/pages/:pageId/medias/:mediaId', (req, res, next) => {
   setTimeout(() => {
     res.json(media)
   }, 500)
+})
+
+app.post('/pages/:pageId/medias/:mediaId/files', (req, res, next) => {
+  const busboy = new Busboy({ headers: req.headers })
+
+  let _filepath = null
+
+  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+    const saveTo = path.join(__dirname, '/tmp/', filename)
+    file.pipe(fs.createWriteStream(saveTo))
+    _filepath = filename
+  })
+
+  // busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
+  //   console.log('Field [' + fieldname + ']: value: ' + inspect(val));
+  // })
+
+  busboy.on('finish', () => {
+    // Find the page
+    const page = findPageById(req.params.pageId)
+
+    // Find the media
+    const media = updateMediaById(page.medias, req.params.mediaId, {
+      filepath: _filepath
+    })
+
+    res.json(media)
+  })
+
+  req.pipe(busboy)
 })
 
 app.get('/pages.json', (req, res) => res.sendFile(`${__dirname}/pages.json`))

@@ -26,6 +26,17 @@ export class Request {
       .then(Request._handleResponse)
   }
 
+  static upload (url, params, data) {
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json'
+      },
+      body: params ? JSON.stringify(params) : data
+    })
+      .then(Request._handleResponse)
+  }
+
   static put (url, params) {
     return fetch(url, {
       method: 'PUT',

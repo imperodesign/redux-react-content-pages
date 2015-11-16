@@ -122,7 +122,9 @@ function page (state = {
   description: '',
   medias: [],
   isFetchingPage: false,
-  isCreatingMedia: false
+  isCreatingMedia: false,
+  isUploadingFileMedia: false,
+  isUploadingFileMediaId: ''
 }, action) {
   let index = null
 
@@ -158,6 +160,26 @@ function page (state = {
       index = findIndex(state.medias, action.media.id)
       return Object.assign({}, state, {
         isCreatingMedia: false,
+        medias: [
+          ...state.medias.slice(0, index),
+          action.media,
+          ...state.medias.slice(index + 1)
+        ]
+      })
+
+    case types.UPLOAD_FILE_MEDIA_REQUEST:
+      return Object.assign({}, state, {
+        isUploadingFileMedia: true
+      })
+    case types.UPLOAD_FILE_MEDIA_FAILURE:
+      // SHOULD SHOW AN ERROR VIA AN ERROR COMPONENT
+      return Object.assign({}, state, {
+        isUploadingFileMedia: false
+      })
+    case types.UPLOAD_FILE_MEDIA_SUCCESS:
+      index = findIndex(state.medias, action.media.id)
+      return Object.assign({}, state, {
+        isUploadingFileMedia: false,
         medias: [
           ...state.medias.slice(0, index),
           action.media,

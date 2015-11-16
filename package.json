@@ -44,6 +44,7 @@
     "babel-loader": "^5.1.4",
     "babel-plugin-react-transform": "^1.1.0",
     "body-parser": "^1.14.1",
+    "busboy": "^0.2.12",
     "expect": "^1.6.0",
     "express": "^4.13.3",
     "node-libs-browser": "^0.5.2",

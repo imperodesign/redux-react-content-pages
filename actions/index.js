@@ -192,19 +192,20 @@ function uploadFileMediaRequest (mediaId) {
 }
 
 function uploadFileMediaSuccess (json) {
-  return { type: types.UPLOAD_FILE_MEDIA_REQUEST, media: json }
+  return { type: types.UPLOAD_FILE_MEDIA_SUCCESS, media: json }
 }
 
 function uploadFileMediaFailure (error) {
-  return { type: types.UPLOAD_FILE_MEDIA_REQUEST, error }
+  return { type: types.UPLOAD_FILE_MEDIA_FAILURE, error }
 }
 
 export function uploadFileMedia (pageId, mediaId, file) {
+  console.log('Uploading...')
   return dispatch => {
     dispatch(uploadFileMediaRequest(mediaId))
     const data = new window.FormData()
     data.append('file', file)
-    Request.post(`${PAGES_URL}/${pageId}/medias/${mediaId}/files`, null, data)
+    Request.upload(`${PAGES_URL}/${pageId}/medias/${mediaId}/files`, null, data)
       .then(json => dispatch(uploadFileMediaSuccess(json)))
       .catch(err => dispatch(uploadFileMediaFailure(err)))
   }
