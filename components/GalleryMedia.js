@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import Media from './Media'
+import List from './List'
 import Uploader from './Uploader'
 
 // Extends Media class
@@ -29,6 +30,10 @@ export default class GalleryMedia extends Media {
     else console.error('Files[] is empty... and this is wrong.')
   }
 
+  handleSort () {
+    console.log('sorting...')
+  }
+
   render () {
     const {
       reference, caption, filepath
@@ -52,6 +57,12 @@ export default class GalleryMedia extends Media {
             ref='caption'
             onBlur={this.update.bind(this)} />
           <br />
+          {filepath !== '' &&
+            <div>
+               <List
+                key={Math.random()}
+                data={[Math.random(), Math.random(), Math.random()]} />
+            </div>}
           {filepath !== '' &&
             <img
               style={{ width: '64px', height: '64px' }}

@@ -23,6 +23,9 @@ export default class CreateMediaForm extends Component {
         <button
           onClick={this.onCreate.bind(this, MediaTypes.IMAGE)}
           type='button'>Image</button>
+        <button
+          onClick={this.onCreate.bind(this, MediaTypes.GALLERY)}
+          type='button'>Gallery</button>
       </form>
     )
   }
