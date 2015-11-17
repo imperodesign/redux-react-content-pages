@@ -5,6 +5,7 @@ import {
   updateHeader,
   createMedia,
   updateMedia,
+  deleteMedia,
   uploadFileMedia,
   updateFileMedia,
   deleteFileMedia,
@@ -41,16 +42,15 @@ class EditPage extends Component {
     dispatch(updateMedia(id, mediaId, params))
   }
 
+  onDeleteMedia (mediaId) {
+    const { id, dispatch } = this.props
+    dispatch(deleteMedia(id, mediaId))
+  }
+
   onUploadFileMedia (mediaId, file) {
     // id -> idPage
     const { dispatch, id } = this.props
     dispatch(uploadFileMedia(id, mediaId, file))
-  }
-
-  onDeleteMedia (type) {
-    const { id, dispatch } = this.props
-    // TODO: implement delete media
-    // dispatch(deleteMedia(type, id))
   }
 
   onUpdateFileMedia (mediaId, fileId, params) {

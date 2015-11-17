@@ -24,7 +24,7 @@ export default class TextMedia extends Media {
     return (
       <div>
         <br />
-        <b>Text Media</b>
+        <b>Text Media</b> (<a href='#' onClick={this.delete.bind(this)}>Delete</a>)
         <br />
         <form>
           Reference: <input

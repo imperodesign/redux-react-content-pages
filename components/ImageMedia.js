@@ -36,7 +36,7 @@ export default class ImageMedia extends Media {
     return (
       <div>
         <br />
-        <b>Image Media</b>
+        <b>Image Media</b> (<a href='#' onClick={this.delete.bind(this)}>Delete</a>)
         <br />
         <form>
           Reference: <input

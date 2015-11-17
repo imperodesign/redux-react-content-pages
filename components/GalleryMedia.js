@@ -49,7 +49,7 @@ export default class GalleryMedia extends Media {
     return (
       <div>
         <br />
-        <b>Gallery Media</b>
+        <b>Gallery Media</b> (<a href='#' onClick={this.delete.bind(this)}>Delete</a>)
         <br />
         <form>
           Reference: <input

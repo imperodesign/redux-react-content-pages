@@ -123,6 +123,8 @@ function page (state = {
   medias: [],
   isFetchingPage: false,
   isCreatingMedia: false,
+  isUpdatingMedia: false, // missing reducer code
+  isDeletingMedia: false,
   isUploadingFileMedia: false,
   isUpdatingFileMedia: false,
   isDeletingFileMedia: false,
@@ -165,6 +167,27 @@ function page (state = {
         medias: [
           ...state.medias.slice(0, index),
           action.media,
+          ...state.medias.slice(index + 1)
+        ]
+      })
+
+    // here it should go UPDATE_MEDIA_REQUEST
+
+    case types.DELETE_MEDIA_REQUEST:
+      return Object.assign({}, state, {
+        isDeletingMedia: true
+      })
+    case types.DELETE_MEDIA_FAILURE:
+      // SHOULD SHOW AN ERROR VIA AN ERROR COMPONENT
+      return Object.assign({}, state, {
+        isDeletingMedia: false
+      })
+    case types.DELETE_MEDIA_SUCCESS:
+      index = findIndex(state.medias, action.media.id)
+      return Object.assign({}, state, {
+        isDeletingMedia: false,
+        medias: [
+          ...state.medias.slice(0, index),
           ...state.medias.slice(index + 1)
         ]
       })

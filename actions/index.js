@@ -171,19 +171,41 @@ function updateMediaRequest (mediaId) {
 }
 
 function updateMediaSuccess (json) {
-  return { type: types.UPDATE_MEDIA_REQUEST, media: json }
+  return { type: types.UPDATE_MEDIA_SUCCESS, media: json }
 }
 
 function updateMediaFailure (error) {
-  return { type: types.UPDATE_MEDIA_REQUEST, error }
+  return { type: types.UPDATE_MEDIA_FAILURE, error }
 }
 
+// TODO: need to implement related reducer code
 export function updateMedia (pageId, mediaId, params) {
   return dispatch => {
     dispatch(updateMediaRequest(mediaId))
     Request.put(`${PAGES_URL}/${pageId}/medias/${mediaId}`, params)
       .then(json => dispatch(updateMediaSuccess(json)))
       .catch(err => dispatch(updateMediaFailure(err)))
+  }
+}
+
+function deleteMediaRequest (mediaId) {
+  return { type: types.DELETE_MEDIA_REQUEST, mediaId }
+}
+
+function deleteMediaSuccess (json) {
+  return { type: types.DELETE_MEDIA_SUCCESS, media: json }
+}
+
+function deleteMediaFailure (error) {
+  return { type: types.DELETE_MEDIA_FAILURE, error }
+}
+
+export function deleteMedia (pageId, mediaId) {
+  return dispatch => {
+    dispatch(deleteMediaRequest(mediaId))
+    Request.delete(`${PAGES_URL}/${pageId}/medias/${mediaId}`)
+      .then(json => dispatch(deleteMediaSuccess(json)))
+      .catch(err => dispatch(deleteMediaFailure(err)))
   }
 }
 

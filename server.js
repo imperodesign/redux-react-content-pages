@@ -114,6 +114,22 @@ function deleteFileById (media, files, id) {
   return file
 }
 
+function deleteMediaById (page, medias, id) {
+  let media = null
+  for (let i = 0; i < medias.length; i++) {
+    if (medias[i].id === id) {
+      media = medias[i]
+      medias = [
+        ...medias.slice(0, i),
+        ...medias.slice(i + 1)
+      ]
+      page.medias = medias
+      break
+    }
+  }
+  return media
+}
+
 app.get('/pages', (req, res) => res.json(pages))
 
 app.get('/pages/:id', (req, res) => res.json(findPageById(req.params.id)))
@@ -182,6 +198,19 @@ app.put('/pages/:pageId/medias/:mediaId', urlEncoder, jsonParser, (req, res, nex
 
   // Find the media
   const media = updateMediaById(page.medias, req.params.mediaId, req.body)
+
+  // Simulate latency
+  setTimeout(() => {
+    res.json(media)
+  }, 500)
+})
+
+app.delete('/pages/:pageId/medias/:mediaId', urlEncoder, jsonParser, (req, res, next) => {
+  // Find the page
+  const page = findPageById(req.params.pageId)
+
+  // Delete the media
+  const media = deleteMediaById(page, page.medias, req.params.mediaId)
 
   // Simulate latency
   setTimeout(() => {
