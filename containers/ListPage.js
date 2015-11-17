@@ -1,15 +1,17 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import {
-  fetchPages, setPublishStatusFilter,
-  setTextSearchFilter, createPage,
-  togglePublish, deletePage
-} from '../actions'
+import actions from '../actions'
 import * as PageFilters from '../constants/PageFilters'
 import Pages from '../components/Pages'
 import PublishStatusFilter from '../components/PublishStatusFilter'
 import TextSearchFilter from '../components/TextSearchFilter'
 import CreateForm from '../components/CreateForm'
+
+const {
+  fetchPages, setPublishStatusFilter,
+  setTextSearchFilter, createPage,
+  togglePublish, deletePage
+} = actions
 
 class ListPage extends Component {
   constructor (props) {

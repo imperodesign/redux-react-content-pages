@@ -1,6 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import {
+import actions from '../actions'
+import Header from '../components/Header'
+import Medias from '../components/Medias'
+import CreateMediaForm from '../components/CreateMediaForm'
+
+const {
   fetchPage,
   updateHeader,
   createMedia,
@@ -10,10 +15,7 @@ import {
   updateFileMedia,
   deleteFileMedia,
   sortGalleryMedia
-} from '../actions'
-import Header from '../components/Header'
-import Medias from '../components/Medias'
-import CreateMediaForm from '../components/CreateMediaForm'
+} = actions
 
 class EditPage extends Component {
   constructor (props) {
