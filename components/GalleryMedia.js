@@ -8,6 +8,7 @@ export default class GalleryMedia extends Media {
 
   constructor (props) {
     super(props)
+    // TODO: enable multiupload
     this.multiple = false
     this.accept = '.jpg,.jpeg,.png,.gif'
   }
