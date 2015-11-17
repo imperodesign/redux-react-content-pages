@@ -1,84 +1,59 @@
 'use strict'
 
 import React, { Component } from 'react'
-
-const placeholder = document.createElement('li')
-placeholder.className = 'placeholder'
+import $ from 'jquery'
+import shortid from 'shortid'
+require('jquery-ui')
 
 export default class SortableImageList extends Component {
   constructor (props) {
     super(props)
     this.state = props
+    this.id = shortid.generate() // this can be the media id
   }
 
   componentWillMount () {
     // this.state = this.props
   }
 
-  dragStart (e) {
-    this.dragged = e.currentTarget
-    e.dataTransfer.effectAllowed = 'move'
-
-    // Firefox requires dataTransfer data to be set
-    e.dataTransfer.setData('text/html', e.currentTarget)
-  }
-
-  dragEnd (e) {
-    this.dragged.style.display = 'block'
-    this.dragged.parentNode.removeChild(placeholder)
-
-    // Update data
-    const data = this.state.data
-    let from = Number(this.dragged.dataset.id)
-    let to = Number(this.over.dataset.id)
-    if (from < to) to--
-    if (this.nodePlacement === 'after') to++
-    data.splice(to, 0, data.splice(from, 1)[0])
-    this.setState({data: data})
-  }
-
-  dragOver (e) {
-    e.preventDefault()
-    this.dragged.style.display = 'none'
-    if (e.target.className === 'placeholder') return
-    this.over = e.target
-    // Inside the dragOver method
-    const relY = e.clientY - this.over.offsetTop
-    const height = this.over.offsetHeight / 2
-    const parent = e.target.parentNode
-
-    if (relY > height) {
-      this.nodePlacement = 'after'
-      parent.insertBefore(placeholder, e.target.nextElementSibling)
-    } else if (relY < height) {
-      this.nodePlacement = 'before'
-      parent.insertBefore(placeholder, e.target)
-    }
+  componentDidMount () {
+    const sortableList = $(`#${this.id}`).sortable({
+      placeholder: 'ui-state-highlight',
+      stop: function (e, ui) {
+        console.log(sortableList.sortable('toArray'))
+      }})
+    $('.sortable').disableSelection()
   }
 
   render () {
     const list = this.state.data.map((item, i) => {
-      const style = {
+      const styleListElement = {
         backgroundImage: `url(/files/${item})`,
-        width: '64px',
+        width: '100%',
         height: '64px',
         display: 'block',
-        backgroundSize: 'cover',
+        backgroundSize: '64px 64px',
         backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'center center'
+        backgroundPosition: 'left top'
       }
-
+      const styleInput = {
+        margin: '20px',
+        marginLeft: '90px'
+      }
       return (
-        <li data-id={i}
+        <li id={i}
+            className='ui-state-default'
             key={i}
-            draggable='true'
-            onDragEnd={this.dragEnd.bind(this)}
-            onDragStart={this.dragStart.bind(this)}
-            style={style}>
+            style={styleListElement}>
+            <input
+              type='text'
+              placeholder='Caption'
+              style={styleInput} />
+            <button type='button'>Delete</button>
         </li>
       )
     })
 
-    return <ul onDragOver={this.dragOver.bind(this)}>{list}</ul>
+    return <ul id={this.id} className={'sortable'}>{list}</ul>
   }
 }
