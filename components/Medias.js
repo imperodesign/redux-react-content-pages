@@ -8,7 +8,9 @@ export default class Medias extends Component {
 
   render () {
     const {
-      onDelete, onUpdate, onUploadFileMedia
+      onDelete, onUpdate,
+      onUploadFileMedia, onUpdateFileMedia,
+      onDeleteFileMedia, onSortGalleryMedia
     } = this.props
 
     const medias = this.props.medias.map((media, i) => {
@@ -29,10 +31,10 @@ export default class Medias extends Component {
               id={media.id}
               reference={media.reference}
               caption={media.caption}
-              filepath={media.filepath}
+              imageFile={media.imageFile}
               onUpdate={onUpdate}
-              onUploadImage={onUploadFileMedia}
-              onDelete={onDelete} />
+              onDelete={onDelete}
+              onUploadImage={onUploadFileMedia} />
           )
         case MediaTypes.GALLERY:
           return (
@@ -40,10 +42,13 @@ export default class Medias extends Component {
               id={media.id}
               reference={media.reference}
               name={media.name}
-              filepaths={media.filepaths}
+              imageFiles={media.imageFiles}
               onUpdate={onUpdate}
+              onDelete={onDelete}
               onUploadImage={onUploadFileMedia}
-              onDelete={onDelete} />
+              onUpdateImage={onUpdateFileMedia}
+              onDeleteImage={onDeleteFileMedia}
+              onSort={onSortGalleryMedia} />
           )
         default:
           // BOOM! WDF :)
@@ -61,6 +66,9 @@ export default class Medias extends Component {
 Medias.propTypes = {
   medias: PropTypes.array.isRequired,
   onUpdate: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
   onUploadFileMedia: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired
+  onUpdateFileMedia: PropTypes.func.isRequired,
+  onDeleteFileMedia: PropTypes.func.isRequired,
+  onSortGalleryMedia: PropTypes.func.isRequired
 }

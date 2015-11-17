@@ -28,6 +28,7 @@
   "homepage": "http://rackt.github.io/redux",
   "dependencies": {
     "attr-accept": "^1.0.3",
+    "bubble-sort-js": "0.0.2",
     "history": "^1.13.0",
     "isomorphic-fetch": "^2.1.1",
     "jquery": "^2.1.4",

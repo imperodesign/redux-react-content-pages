@@ -5,7 +5,10 @@ import {
   updateHeader,
   createMedia,
   updateMedia,
-  uploadFileMedia
+  uploadFileMedia,
+  updateFileMedia,
+  deleteFileMedia,
+  sortGalleryMedia
 } from '../actions'
 import Header from '../components/Header'
 import Medias from '../components/Medias'
@@ -32,21 +35,37 @@ class EditPage extends Component {
     dispatch(createMedia(id, type))
   }
 
-  onUpdateMedia (idMedia, params) {
+  onUpdateMedia (mediaId, params) {
     // id -> idPage
     const { dispatch, id } = this.props
-    dispatch(updateMedia(id, idMedia, params))
+    dispatch(updateMedia(id, mediaId, params))
   }
 
-  onUploadFileMedia (idMedia, file) {
+  onUploadFileMedia (mediaId, file) {
     // id -> idPage
     const { dispatch, id } = this.props
-    dispatch(uploadFileMedia(id, idMedia, file))
+    dispatch(uploadFileMedia(id, mediaId, file))
   }
 
   onDeleteMedia (type) {
     const { id, dispatch } = this.props
-    dispatch(createMedia(type, id))
+    // TODO: implement delete media
+    // dispatch(deleteMedia(type, id))
+  }
+
+  onUpdateFileMedia (mediaId, fileId, params) {
+    const { dispatch, id } = this.props
+    dispatch(updateFileMedia(id, mediaId, fileId, params))
+  }
+
+  onDeleteFileMedia (mediaId, fileId) {
+    const { dispatch, id } = this.props
+    dispatch(deleteFileMedia(id, mediaId, fileId))
+  }
+
+  onSortGalleryMedia (mediaId, sortedIds) {
+    const { id, dispatch } = this.props
+    dispatch(sortGalleryMedia(id, mediaId, sortedIds))
   }
 
   render () {
@@ -74,7 +93,10 @@ class EditPage extends Component {
           <Medias
             medias={medias}
             onUpdate={this.onUpdateMedia.bind(this)}
-            onUploadFileMedia={this.onUploadFileMedia.bind(this)}
+            onUploadFileMedia={this.onUploadFileMedia.bind(this)} // create
+            onUpdateFileMedia={this.onUpdateFileMedia.bind(this)}
+            onDeleteFileMedia={this.onDeleteFileMedia.bind(this)}
+            onSortGalleryMedia={this.onSortGalleryMedia.bind(this)}
             onDelete={this.onDeleteMedia.bind(this)} />}
 
         {!isFetchingPage &&

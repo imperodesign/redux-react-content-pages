@@ -22,16 +22,15 @@ export default class ImageMedia extends Media {
     })
   }
 
-  uploadImage (e, files) {
+  uploadImage (files) {
     const { id, onUploadImage } = this.props
-    e.preventDefault()
     if (files.length > 0) onUploadImage(id, files[0])
     else console.error('Files[] is empty... and this is wrong.')
   }
 
   render () {
     const {
-      reference, caption, filepath
+      reference, caption, imageFile
     } = this.props
 
     return (
@@ -52,10 +51,10 @@ export default class ImageMedia extends Media {
             ref='caption'
             onBlur={this.update.bind(this)} />
           <br />
-          {filepath !== '' &&
+          {imageFile &&
             <img
               style={{ width: '64px', height: '64px' }}
-              src={`/files/${filepath}`} />}
+              src={`/files/${imageFile.filename}`} />}
           <Uploader
             multiple={this.multiple}
             accept={this.accept}
@@ -68,7 +67,7 @@ export default class ImageMedia extends Media {
 
 ImageMedia.propTypes = Object.assign({}, Media.propTypes, {
   caption: PropTypes.string.isRequired,
-  filepath: PropTypes.string.isRequired,
+  imageFile: PropTypes.object,
   onUpdate: PropTypes.func.isRequired,
   onUploadImage: PropTypes.func.isRequired
 })

@@ -1,5 +1,12 @@
 'use strict'
 
+/*
+ * This server code is not the scope of this demo.
+ * We simply need it to simulate a real API.
+ * You should't use in a production env, since has been
+ * built only for simuation puropose.
+ */
+
 const fs = require('fs')
 const path = require('path')
 const shortid = require('shortid')
@@ -80,6 +87,33 @@ function deletePageById (id) {
   return page
 }
 
+function updateFileById (files, id, params) {
+  let file = null
+  for (let i = 0; i < files.length; i++) {
+    if (files[i].id === id) {
+      files[i] = _.assign(files[i], params)
+      file = files[i]
+    }
+  }
+  return file
+}
+
+function deleteFileById (media, files, id) {
+  let file = null
+  for (let i = 0; i < files.length; i++) {
+    if (files[i].id === id) {
+      file = files[i]
+      files = [
+        ...files.slice(0, i),
+        ...files.slice(i + 1)
+      ]
+      media.imageFiles = files
+      break
+    }
+  }
+  return file
+}
+
 app.get('/pages', (req, res) => res.json(pages))
 
 app.get('/pages/:id', (req, res) => res.json(findPageById(req.params.id)))
@@ -126,10 +160,10 @@ app.post('/pages/:pageId/medias', urlEncoder, jsonParser, (req, res, next) => {
     media.content = ''
   } else if (media.type === 'image') {
     media.caption = ''
-    media.filepath = ''
+    media.imageFile = null
   } else if (media.type === 'gallery') {
     media.name = ''
-    media.filepaths = []
+    media.imageFiles = []
   }
 
   // OTHER TYPES COMING
@@ -155,20 +189,36 @@ app.put('/pages/:pageId/medias/:mediaId', urlEncoder, jsonParser, (req, res, nex
   }, 500)
 })
 
+function getFileExt (mimetype) {
+  switch (mimetype) {
+    case 'image/gif':
+      return '.gif'
+    case 'image/png':
+      return '.png'
+    case 'image/jpeg':
+      return '.jpeg'
+    default:
+      return '.jpg'
+  }
+}
+
 app.post('/pages/:pageId/medias/:mediaId/files', (req, res, next) => {
   const busboy = new Busboy({ headers: req.headers })
 
-  let _filepath = null
+  const uploadedFile = {}
 
   busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-    const saveTo = path.join(__dirname, '/tmp/', filename)
+    const id = shortid.generate()
+    const newFilename = `${id}${getFileExt(mimetype)}`
+    const saveTo = path.join(__dirname, '/tmp/', newFilename)
     file.pipe(fs.createWriteStream(saveTo))
-    _filepath = filename
+    uploadedFile.id = id
+    uploadedFile.caption = filename
+    uploadedFile.filename = newFilename
+    uploadedFile.originalFilename = filename
+    uploadedFile.encoding = encoding
+    uploadedFile.mimetype = mimetype
   })
-
-  // busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
-  //   console.log('Field [' + fieldname + ']: value: ' + inspect(val));
-  // })
 
   busboy.on('finish', () => {
     // Find the page
@@ -177,11 +227,19 @@ app.post('/pages/:pageId/medias/:mediaId/files', (req, res, next) => {
     // Find the media
     let media = findMediaById(page.medias, req.params.mediaId)
 
-    let updateParams = { filepath: _filepath }
+    let updateParams = { }
 
-    if (media.type === 'gallery') {
+    console.log(`Uploaded: ${uploadedFile.originalFilename}`)
+
+    if (media.type === 'image') {
+      uploadedFile.order = 0
       updateParams = {
-        filepaths: media.filepaths.concat([_filepath])
+        imageFile: uploadedFile
+      }
+    } else if (media.type === 'gallery') {
+      uploadedFile.order = media.imageFiles.length
+      updateParams = {
+        imageFiles: media.imageFiles.concat([uploadedFile])
       }
     }
 
@@ -192,6 +250,51 @@ app.post('/pages/:pageId/medias/:mediaId/files', (req, res, next) => {
   })
 
   req.pipe(busboy)
+})
+
+app.put('/pages/:pageId/medias/:mediaId/files/sort',
+  urlEncoder, jsonParser, (req, res, next) => {
+    // Find the page
+    const page = findPageById(req.params.pageId)
+
+    // Find the media
+    let media = findMediaById(page.medias, req.params.mediaId)
+    const sortedIds = req.body.sortedIds
+    const dictionary = []
+    sortedIds.forEach((id, i) => dictionary[id] = i)
+    media.imageFiles.forEach((file, i) => file.order = dictionary[file.id])
+
+    res.json(media)
+  })
+
+app.put('/pages/:pageId/medias/:mediaId/files/:fileId', urlEncoder, jsonParser, (req, res, next) => {
+  // Find the page
+  const page = findPageById(req.params.pageId)
+  const media = findMediaById(page.medias, req.params.mediaId)
+
+  // Update the file
+  // const file = updateFileById(media.imageFiles, req.params.fileId, req.body)
+  updateFileById(media.imageFiles, req.params.fileId, req.body)
+
+  // Simulate latency
+  setTimeout(() => {
+    res.json(media)
+  }, 500)
+})
+
+app.delete('/pages/:pageId/medias/:mediaId/files/:fileId', (req, res, next) => {
+  // Find the page
+  const page = findPageById(req.params.pageId)
+  const media = findMediaById(page.medias, req.params.mediaId)
+
+  // Delete the media
+  // const file = deleteFileById(media, media.imageFiles, req.params.fileId)
+  deleteFileById(media, media.imageFiles, req.params.fileId)
+
+  // Simulate latency
+  setTimeout(() => {
+    res.json(media)
+  }, 500)
 })
 
 app.get('/pages.json', (req, res) => res.sendFile(`${__dirname}/pages.json`))

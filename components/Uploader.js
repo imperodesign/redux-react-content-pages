@@ -19,7 +19,7 @@ export default class Uploader extends Component {
     }
 
     // UPLOAD STUFF FOR REAL NOW :-)
-    this.props.onUpload(e, files)
+    this.props.onUpload(files)
   }
 
   render () {

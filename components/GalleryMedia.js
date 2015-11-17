@@ -24,20 +24,26 @@ export default class GalleryMedia extends Media {
     })
   }
 
-  uploadImage (e, files) {
+  uploadImage (files) {
     const { id, onUploadImage } = this.props
-    e.preventDefault()
-    if (files.length > 0) onUploadImage(id, files[0])
-    else console.error('Files[] is empty... and this is wrong.')
+    // TODO: Check if it's the right way to make this...
+    files.forEach((file, i) => onUploadImage(id, file))
   }
 
-  handleSort () {
-    console.log('sorting...')
+  updateImage (fileId, params) {
+    const { id, onUpdateImage } = this.props
+    onUpdateImage(id, fileId, params)
+  }
+
+  deleteImage (fileId) {
+    const { id, onDeleteImage } = this.props
+    onDeleteImage(id, fileId)
   }
 
   render () {
     const {
-      reference, name, filepaths
+      id, reference, name, imageFiles,
+      onSort
     } = this.props
 
     return (
@@ -58,11 +64,15 @@ export default class GalleryMedia extends Media {
             ref='name'
             onBlur={this.update.bind(this)} />
           <br />
-          {filepaths.length > 0 &&
+          {imageFiles.length > 0 &&
             <SortableImageList
               key={Math.random()}
-              data={filepaths} />}
-          {filepaths.length > 0 &&
+              mediaId={id}
+              images={imageFiles}
+              onSort={onSort}
+              onUpdateImage={this.updateImage.bind(this)}
+              onDeleteImage={this.deleteImage.bind(this)} />}
+          {imageFiles.length > 0 &&
             <br />}
           <Uploader
             multiple={this.multiple}
@@ -75,8 +85,12 @@ export default class GalleryMedia extends Media {
 }
 
 GalleryMedia.propTypes = Object.assign({}, Media.propTypes, {
+  id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  filepaths: PropTypes.array.isRequired,
+  imageFiles: PropTypes.array.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  onUploadImage: PropTypes.func.isRequired
+  onUploadImage: PropTypes.func.isRequired,
+  onUpdateImage: PropTypes.func.isRequired,
+  onDeleteImage: PropTypes.func.isRequired,
+  onSort: PropTypes.func.isRequired
 })

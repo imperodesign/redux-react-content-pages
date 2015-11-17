@@ -1,15 +1,14 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import $ from 'jquery'
-import shortid from 'shortid'
+import bubblesort from 'bubble-sort-js'
+import SortableImage from './SortableImage'
 require('jquery-ui')
 
 export default class SortableImageList extends Component {
   constructor (props) {
     super(props)
-    this.state = props
-    this.id = shortid.generate() // this can be the media id
   }
 
   componentWillMount () {
@@ -17,43 +16,43 @@ export default class SortableImageList extends Component {
   }
 
   componentDidMount () {
-    const sortableList = $(`#${this.id}`).sortable({
+    const sortableList = $(`#${this.props.mediaId}`).sortable({
       placeholder: 'ui-state-highlight',
-      stop: function (e, ui) {
-        console.log(sortableList.sortable('toArray'))
+      stop: (e, ui) => {
+        const sortedIds = sortableList.sortable('toArray')
+        this.props.onSort(this.props.mediaId, sortedIds)
       }})
     $('.sortable').disableSelection()
   }
 
   render () {
-    const list = this.state.data.map((item, i) => {
-      const styleListElement = {
-        backgroundImage: `url(/files/${item})`,
-        width: '100%',
-        height: '64px',
-        display: 'block',
-        backgroundSize: '64px 64px',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'left top'
-      }
-      const styleInput = {
-        margin: '20px',
-        marginLeft: '90px'
-      }
+    const {
+      images,
+      onUpdateImage, onDeleteImage
+    } = this.props
+
+    bubblesort(images, (a, b) => a.order - b.order)
+
+    const list = images.map((image, i) => {
       return (
-        <li id={i}
-            className='ui-state-default'
-            key={i}
-            style={styleListElement}>
-            <input
-              type='text'
-              placeholder='Caption'
-              style={styleInput} />
-            <button type='button'>Delete</button>
-        </li>
+        <SortableImage
+          key={i}
+          id={image.id}
+          caption={image.caption}
+          filename={image.filename}
+          onUpdate={onUpdateImage}
+          onDelete={onDeleteImage} />
       )
     })
 
-    return <ul id={this.id} className={'sortable'}>{list}</ul>
+    return <ul id={this.props.mediaId} className={'sortable'}>{list}</ul>
   }
+}
+
+SortableImageList.propTypes = {
+  mediaId: PropTypes.string.isRequired,
+  images: PropTypes.array.isRequired,
+  onSort: PropTypes.func.isRequired,
+  onUpdateImage: PropTypes.func.isRequired,
+  onDeleteImage: PropTypes.func.isRequired
 }

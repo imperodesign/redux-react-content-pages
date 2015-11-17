@@ -209,3 +209,66 @@ export function uploadFileMedia (pageId, mediaId, file) {
       .catch(err => dispatch(uploadFileMediaFailure(err)))
   }
 }
+
+function updateFileMediaRequest (mediaId, fileId) {
+  return { type: types.UPDATE_FILE_MEDIA_REQUEST, mediaId, fileId }
+}
+
+function updateFileMediaSucess (json) {
+  return { type: types.UPDATE_FILE_MEDIA_SUCCESS, media: json }
+}
+
+function updateFileMediaFailure (error) {
+  return { type: types.UPDATE_FILE_MEDIA_FAILURE, error }
+}
+
+export function updateFileMedia (pageId, mediaId, fileId, params) {
+  return dispatch => {
+    dispatch(updateFileMediaRequest(mediaId, fileId))
+    Request.put(`${PAGES_URL}/${pageId}/medias/${mediaId}/files/${fileId}`, params)
+      .then(json => dispatch(updateFileMediaSucess(json)))
+      .catch(err => dispatch(updateFileMediaFailure(err)))
+  }
+}
+
+function deleteFileMediaRequest (mediaId, fileId) {
+  return { type: types.DELETE_FILE_MEDIA_REQUEST, mediaId, fileId }
+}
+
+function deleteFileMediaSuccess (json) {
+  return { type: types.DELETE_FILE_MEDIA_SUCCESS, media: json }
+}
+
+function deleteFileMediaFailure (error) {
+  return { type: types.DELETE_FILE_MEDIA_FAILURE, error }
+}
+
+export function deleteFileMedia (pageId, mediaId, fileId, params) {
+  return dispatch => {
+    dispatch(deleteFileMediaRequest(mediaId, fileId))
+    Request.delete(`${PAGES_URL}/${pageId}/medias/${mediaId}/files/${fileId}`, params)
+      .then(json => dispatch(deleteFileMediaSuccess(json)))
+      .catch(err => dispatch(deleteFileMediaFailure(err)))
+  }
+}
+
+function sortGalleryMediaRequest (mediaId) {
+  return { type: types.SORT_GALLERY_MEDIA_REQUEST, mediaId }
+}
+
+function sortGalleryMediaSuccess (json) {
+  return { type: types.SORT_GALLERY_MEDIA_SUCCESS, media: json }
+}
+
+function sortGalleryMediaFailure (error) {
+  return { type: types.SORT_GALLERY_MEDIA_FAILURE, error }
+}
+
+export function sortGalleryMedia (pageId, mediaId, sortedIds) {
+  return dispatch => {
+    dispatch(sortGalleryMediaRequest(mediaId))
+    Request.put(`${PAGES_URL}/${pageId}/medias/${mediaId}/files/sort`, { sortedIds })
+      .then(json => dispatch(sortGalleryMediaSuccess(json)))
+      .catch(err => dispatch(sortGalleryMediaFailure(err)))
+  }
+}

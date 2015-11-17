@@ -124,7 +124,9 @@ function page (state = {
   isFetchingPage: false,
   isCreatingMedia: false,
   isUploadingFileMedia: false,
-  isUploadingFileMediaId: ''
+  isUpdatingFileMedia: false,
+  isDeletingFileMedia: false,
+  isSortingGalleryMedia: false
 }, action) {
   let index = null
 
@@ -180,6 +182,66 @@ function page (state = {
       index = findIndex(state.medias, action.media.id)
       return Object.assign({}, state, {
         isUploadingFileMedia: false,
+        medias: [
+          ...state.medias.slice(0, index),
+          action.media,
+          ...state.medias.slice(index + 1)
+        ]
+      })
+
+    case types.UPDATE_FILE_MEDIA_REQUEST:
+      return Object.assign({}, state, {
+        isUpdatingFileMedia: true
+      })
+    case types.UPDATE_FILE_MEDIA_FAILURE:
+      // SHOULD SHOW AN ERROR VIA AN ERROR COMPONENT
+      return Object.assign({}, state, {
+        isUpdatingFileMedia: false
+      })
+    case types.UPDATE_FILE_MEDIA_SUCCESS:
+      index = findIndex(state.medias, action.media.id)
+      return Object.assign({}, state, {
+        isUpdatingFileMedia: false,
+        medias: [
+          ...state.medias.slice(0, index),
+          action.media,
+          ...state.medias.slice(index + 1)
+        ]
+      })
+
+    case types.DELETE_FILE_MEDIA_REQUEST:
+      return Object.assign({}, state, {
+        isDeletingFileMedia: true
+      })
+    case types.DELETE_FILE_MEDIA_FAILURE:
+      // SHOULD SHOW AN ERROR VIA AN ERROR COMPONENT
+      return Object.assign({}, state, {
+        isDeletingFileMedia: false
+      })
+    case types.DELETE_FILE_MEDIA_SUCCESS:
+      index = findIndex(state.medias, action.media.id)
+      return Object.assign({}, state, {
+        isDeletingFileMedia: false,
+        medias: [
+          ...state.medias.slice(0, index),
+          action.media,
+          ...state.medias.slice(index + 1)
+        ]
+      })
+
+    case types.SORT_GALLERY_MEDIA_REQUEST:
+      return Object.assign({}, state, {
+        isSortingGalleryMedia: true
+      })
+    case types.SORT_GALLERY_MEDIA_FAILURE:
+      // SHOULD SHOW AN ERROR VIA AN ERROR COMPONENT
+      return Object.assign({}, state, {
+        isSortingGalleryMedia: false
+      })
+    case types.SORT_GALLERY_MEDIA_SUCCESS:
+      index = findIndex(state.medias, action.media.id)
+      return Object.assign({}, state, {
+        isSortingGalleryMedia: false,
         medias: [
           ...state.medias.slice(0, index),
           action.media,
